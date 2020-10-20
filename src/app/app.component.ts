@@ -107,7 +107,7 @@ export class AppComponent implements OnInit {
       false,
       ParentStage.hospitalised,
       StageIdentifier.recovered,
-      null,
+      StageIdentifier.recovered,
       0,
       7,
       14,
@@ -132,13 +132,14 @@ export class AppComponent implements OnInit {
     ),
   ];
   public doublingRate = 7;
-  public initiallyInfected = 1000;
+  public initiallyInfected = 100;
   public population = 67500000;
   public lengthOfDay = 0.2;
   public spreading = true;
 
   private interval;
   public aSymptomaticOn = false;
+  public showProgression: boolean;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -385,12 +386,31 @@ export class AppComponent implements OnInit {
     for (let i = minDays; i <= maxDays; i++) {
       distributions[i] = 0;
     }
-    for (let i = 1; i <= numberOfRands; i++) {
-      const nextRand = d3.randomInt(minDays, maxDays)();
-      // if (peakDays !== null) {
-      //Some sort of adjustment
-      //}
-      distributions[nextRand] += valuePerSlot;
+    if (peakDays === null) {
+      for (let i = 1; i <= numberOfRands; i++) {
+        const nextRand = d3.randomInt(minDays, maxDays)();
+        distributions[nextRand] += valuePerSlot;
+      }
+    } else {
+      /**
+       * Where we have a "peak" we need to make it the actual peak number.
+       * There's probably better ways of doing this
+       */
+      for (let i = 1; i <= numberOfRands; i++) {
+        const base = d3.randomInt(1, 100)();
+        let randDay = 0;
+        if (base > 40 && base < 60) {
+          randDay = peakDays;
+        } else if (base < 50) {
+          randDay = Math.ceil(((base / 40) * (peakDays - minDays)) + minDays);
+        } else {
+          randDay = Math.floor(((base / 100) * (maxDays - peakDays)) + minDays);
+        }
+
+        randDay = Math.round(randDay);
+
+        distributions[randDay] += valuePerSlot;
+      }
     }
     return distributions;
   }
@@ -403,5 +423,9 @@ export class AppComponent implements OnInit {
   showChanges(): void {
     this.dailyTotalOn = false;
     this.changesOn = true;
+  }
+
+  toggleProgression(): void {
+    this.showProgression = !this.showProgression;
   }
 }

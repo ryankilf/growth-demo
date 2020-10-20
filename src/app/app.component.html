@@ -1,9 +1,98 @@
 <section class="section">
-  <div class="container">
+
+  <nav class="navbar is-fixed-top has-background-dark" role="navigation" aria-label="main navigation">
+
+    <div class="container">
+
+      <div class="navbar-brand">
+        <h1 class="title is-1 has-text-white">COVID-19 Progression demo</h1>
+      </div>
+    </div>
+  </nav>
+  <div class="container main-body">
     <div class="columns">
-      <div class="column is-three-quarters">
+      <div class="column is-four-fifths">
         <div *ngIf="started">
-          <h2 class="title is-2">Day {{ day }}</h2>
+          <div class="columns">
+
+            <div class="column">
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-header-title">
+                    Day
+                  </div>
+                </div>
+                <div class="card-content">
+                  {{ day }}
+                </div>
+                <div class="card-footer">
+                </div>
+              </div>
+            </div>
+
+            <div class="column">
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-header-title">
+                    Total Ever Infected
+                  </div>
+                </div>
+                <div class="card-content">
+                  9999
+                </div>
+                <div class="card-footer">
+                </div>
+              </div>
+            </div>
+
+            <div class="column">
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-header-title">
+                    Total Ever Symptomatic
+                  </div>
+                </div>
+                <div class="card-content">
+                  9999
+                </div>
+                <div class="card-footer">
+                </div>
+              </div>
+            </div>
+
+            <div class="column">
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-header-title">
+                    Days since last transmission
+                  </div>
+                </div>
+                <div class="card-content">
+                  9999
+                </div>
+                <div class="card-footer">
+                </div>
+              </div>
+            </div>
+
+            <div class="column">
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-header-title">
+                    Dead
+                  </div>
+                </div>
+                <div class="card-content">
+                  9999
+                </div>
+                <div class="card-footer">
+                  Today: 9999
+                </div>
+              </div>
+            </div>
+
+
+          </div>
           <p>Chart here</p>
 
           <h3 class="title is-3">Tables</h3>
@@ -26,8 +115,8 @@
               <th *ngIf="aSymptomaticOn">asymtomatic</th>
               <th>symtomatic</th>
               <th>hospital</th>
-              <th>icu</th>
-              <th>post ICU - Hospital</th>
+              <th>ICU</th>
+              <th>Hospital<br />(post ICU)</th>
               <th>recovered</th>
               <th>dead</th>
             </tr>
@@ -83,7 +172,7 @@
           </table>
         </div>
       </div>
-      <div class="column is-one-quarter">
+      <div class="column is-one-fifth">
         <h2 class="title is-2">Settings</h2>
         <form [formGroup]="settingsForm">
           <div class="field is-vertical">
@@ -93,6 +182,7 @@
             <div class="field-body">
               <div class="field">
                 <input
+                  [attr.disabled]="started ? '' : null"
                   [(ngModel)]="initiallyInfected"
                   id="initiallyInfected"
                   class="input"
@@ -105,7 +195,21 @@
 
           <div class="field is-vertical">
             <div class="field-label is-normal">
-              <label class="label" for="doublingRate">Doubling Rate (days) ( {{ doublingRate }} )</label>
+              <label class="label" for="population">Population</label>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <input
+                  [attr.disabled]="started ? '' : null"
+                  [(ngModel)]="population" id="population" class="input" type="number"
+                  formControlName="population"/>
+              </div>
+            </div>
+          </div>
+
+          <div class="field is-vertical">
+            <div class="field-label is-normal">
+              <label class="label" for="doublingRate">Doubling Rate (days)</label>
             </div>
             <div class="field-body">
               <div class="field">
@@ -117,24 +221,14 @@
 
           <div class="field is-vertical">
             <div class="field-label is-normal">
-              <label class="label" for="population">Population</label>
-            </div>
-            <div class="field-body">
-              <div class="field">
-                <input [(ngModel)]="population" id="population" class="input" type="number"
-                       formControlName="population"/>
-              </div>
-            </div>
-          </div>
-
-          <div class="field is-vertical">
-            <div class="field-label is-normal">
               <label class="label" for="lengthOfDay">Length of Day (in seconds)</label>
             </div>
             <div class="field-body">
               <div class="field">
-                <input [(ngModel)]="lengthOfDay" id="lengthOfDay" class="input" type="number"
-                       formControlName="lengthOfDay"/>
+                <input
+                  [attr.disabled]="started && !paused ? '' : null"
+                  [(ngModel)]="lengthOfDay" id="lengthOfDay" class="input" type="number"
+                  formControlName="lengthOfDay"/>
               </div>
             </div>
           </div>
@@ -171,33 +265,39 @@
             </button>
           </div>
         </form>
-        <hr />
-        <h2 class="title is-2">Progression</h2>
-        <div *ngFor="let stage of stages">
-          <hr />
-          <div class="card">
-            <header class="card-header">
-              <p class="card-header-title">{{ stage.label }}</p>
-            </header>
-            <div class="card-content">
-              <div *ngIf="stage.complete">
-                Final Stage
-              </div>
-              <div *ngIf="!stage.complete">
-                <h2>Progression: Worse</h2>
-                Stage: {{stage.getLabelFromNumber(stage.nextStageWorse)}}<br/>
-                Chance: {{stage.nextStageWorseChance}}<br/>
-                Min Time: {{stage.nextStageMinPeriod}}<br/>
-                Peak Time: {{stage.nextStagePeakPeriod}}<br/>
-                Max Time: {{stage.nextStateMaxPeriod}}<br/>
-                <hr/>
-                <h2>Progression: Better</h2>
-                Stage: {{stage.getLabelFromNumber(stage.nextStageBetter)}}<br/>
-                Chance: {{1 - stage.nextStageWorseChance}}<br/>
-                Min Time: {{stage.nextStageBetterMinPeriod}}<br/>
-                Peak Time: {{stage.nextStageBetterPeakPeriod}}<br/>
-                Max Time: {{stage.nextStateBetterMaxPeriod}}<br/>
+        <hr/>
+        <button class="button is-small" (click)="toggleProgression()">
+          <span *ngIf="showProgression">Hide Progression</span>
+          <span *ngIf="!showProgression">Show Progression</span>
+        </button>
+        <div id="progression-container" *ngIf="showProgression">
+          <h2 class="title is-2">Progression</h2>
+          <div *ngFor="let stage of stages">
+            <hr/>
+            <div class="card">
+              <header class="card-header">
+                <p class="card-header-title">{{ stage.label }}</p>
+              </header>
+              <div class="card-content">
+                <div *ngIf="stage.complete">
+                  Final Stage
+                </div>
+                <div *ngIf="!stage.complete">
+                  <h2>Progression: Worse</h2>
+                  Stage: {{stage.getLabelFromNumber(stage.nextStageWorse)}}<br/>
+                  Chance: {{stage.nextStageWorseChance}}<br/>
+                  Min Time: {{stage.nextStageMinPeriod}}<br/>
+                  Peak Time: {{stage.nextStagePeakPeriod}}<br/>
+                  Max Time: {{stage.nextStateMaxPeriod}}<br/>
+                  <hr/>
+                  <h2>Progression: Better</h2>
+                  Stage: {{stage.getLabelFromNumber(stage.nextStageBetter)}}<br/>
+                  Chance: {{1 - stage.nextStageWorseChance}}<br/>
+                  Min Time: {{stage.nextStageBetterMinPeriod}}<br/>
+                  Peak Time: {{stage.nextStageBetterPeakPeriod}}<br/>
+                  Max Time: {{stage.nextStateBetterMaxPeriod}}<br/>
 
+                </div>
               </div>
             </div>
           </div>
