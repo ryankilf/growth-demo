@@ -34,7 +34,6 @@ export class AppComponent implements OnInit {
   public stages: Stage[] = [
     new Stage(
       StageIdentifier.asymptomatic,
-      'Asymptomatic',
       false,
       ParentStage.infected,
       StageIdentifier.symptomatic,
@@ -49,7 +48,6 @@ export class AppComponent implements OnInit {
     ),
     new Stage(
       StageIdentifier.recovered,
-      'Recovered',
       true,
       ParentStage.recovered,
       null,
@@ -64,7 +62,6 @@ export class AppComponent implements OnInit {
     ),
     new Stage(
       StageIdentifier.symptomatic,
-      'Symptomatic',
       false,
       ParentStage.infected,
       StageIdentifier.hospital,
@@ -79,7 +76,6 @@ export class AppComponent implements OnInit {
     ),
     new Stage(
       StageIdentifier.hospital,
-      'Hospital',
       false,
       ParentStage.hospitalised,
       StageIdentifier.icu,
@@ -94,7 +90,6 @@ export class AppComponent implements OnInit {
     ),
     new Stage(
       StageIdentifier.icu,
-      'Icu',
       false,
       ParentStage.hospitalised,
       StageIdentifier.dead,
@@ -109,7 +104,6 @@ export class AppComponent implements OnInit {
     ),
     new Stage(
       StageIdentifier.postIcuRecovery,
-      'post ICU Hospital',
       false,
       ParentStage.hospitalised,
       StageIdentifier.recovered,
@@ -121,10 +115,24 @@ export class AppComponent implements OnInit {
       null,
       null,
       null
-    )
+    ),
+    new Stage(
+      StageIdentifier.dead,
+      true,
+      ParentStage.recovered,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ),
   ];
   public doublingRate = 7;
-  public initiallyInfected = 10;
+  public initiallyInfected = 1000;
   public population = 67500000;
   public lengthOfDay = 0.2;
   public spreading = true;
@@ -283,8 +291,8 @@ export class AppComponent implements OnInit {
 
   processAdditions(): void {
     const dayAddition = this.getDayAddition(this.day);
-    let negativeNumber = 0;
-    let positiveNumber = 0;
+    let worseNumber = 0;
+    let betterNumber = 0;
     let numberToProcess = 0;
     // tslint:disable-next-line:forin
     for (const i in this.stages) {
@@ -299,6 +307,8 @@ export class AppComponent implements OnInit {
           numberToProcess = dayAddition.asymptomatic;
           break;
         case StageIdentifier.symptomatic:
+          console.log('symptomatic');
+          console.log(stage);
           numberToProcess = dayAddition.symptomatic;
           break;
         case StageIdentifier.recovered:
@@ -320,36 +330,43 @@ export class AppComponent implements OnInit {
           break;
       }
 
-      negativeNumber = numberToProcess * stage.nextStageWorseChance;
-      positiveNumber = numberToProcess - negativeNumber;
-      const distributionNegative = this.getDistributions(
-        negativeNumber,
+      worseNumber = numberToProcess * stage.nextStageWorseChance;
+      betterNumber = numberToProcess - worseNumber;
+      const distributionWorse = this.getDistributions(
+        worseNumber,
         stage.nextStageMinPeriod,
         stage.nextStateMaxPeriod,
         stage.nextStagePeakPeriod
       );
 
-      distributionNegative.forEach((numberToDistribute, day) => {
+      if (stage.id === StageIdentifier.symptomatic) {
+        console.log('numberToProcess ' + numberToProcess);
+        console.log('positive ' + betterNumber);
+        console.log('negative ' + worseNumber);
+        console.log('end');
+      }
+
+      distributionWorse.forEach((numberToDistribute, day) => {
         const newDayAddition = this.getDayAddition(this.day + day);
         const newDaySubtraction = this.getDaySubtraction(this.day + day);
-        const additionField = this.enumsToFields[stage.nextStageBetter];
+        const additionField = this.enumsToFields[stage.nextStageWorse];
         const subtractionField = this.enumsToFields[stage.id];
         newDayAddition[additionField] += numberToDistribute;
         newDaySubtraction[subtractionField] += numberToDistribute;
       });
 
-      if (positiveNumber > 0) {
-        const distributionPositive = this.getDistributions(
-          positiveNumber,
+      if (betterNumber > 0) {
+        const distributionBetter = this.getDistributions(
+          betterNumber,
           stage.nextStageBetterMinPeriod ?? stage.nextStageMinPeriod,
           stage.nextStateBetterMaxPeriod ?? stage.nextStateMaxPeriod,
-          stage.nextStageBetterMinPeriod ? (stage.nextStageBetterPeakPeriod) : null
+          stage.nextStageBetterPeakPeriod ? (stage.nextStageBetterPeakPeriod) : null
         );
 
-        distributionPositive.forEach((numberToDistribute, day) => {
+        distributionBetter.forEach((numberToDistribute, day) => {
           const newDayAddition = this.getDayAddition(this.day + day);
           const newDaySubtraction = this.getDaySubtraction(this.day + day);
-          const additionField = this.enumsToFields[stage.nextStageWorse];
+          const additionField = this.enumsToFields[stage.nextStageBetter];
           const subtractionField = this.enumsToFields[stage.id];
           newDayAddition[additionField] += numberToDistribute;
           newDaySubtraction[subtractionField] += numberToDistribute;

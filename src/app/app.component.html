@@ -19,32 +19,32 @@
           </div>
           <table class="table" *ngIf="dailyTotalOn">
             <thead>
-              <tr>
-                <th>Day</th>
-                <th>Rate</th>
-                <th>Spreading</th>
-                <th *ngIf="aSymptomaticOn">asymtomatic</th>
-                <th>symtomatic</th>
-                <th>hospital</th>
-                <th>icu</th>
-                <th>post ICU - Hospital</th>
-                <th>recovered</th>
-                <th>dead</th>
-              </tr>
+            <tr>
+              <th>Day</th>
+              <th>Rate</th>
+              <th>Spreading</th>
+              <th *ngIf="aSymptomaticOn">asymtomatic</th>
+              <th>symtomatic</th>
+              <th>hospital</th>
+              <th>icu</th>
+              <th>post ICU - Hospital</th>
+              <th>recovered</th>
+              <th>dead</th>
+            </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let oneDay of dayTotal.slice().reverse()">
-                <td>{{oneDay.day}}</td>
-                <td>{{oneDay.doublingRate}}</td>
-                <td>{{oneDay.spreading ? 'yes' : 'no'}}</td>
-                <td *ngIf="aSymptomaticOn">{{oneDay.asymptomatic | number: '1.0-0'}}</td>
-                <td>{{oneDay.symptomatic | number: '1.0-0'}}</td>
-                <td>{{oneDay.hospital | number: '1.0-0'}}</td>
-                <td>{{oneDay.icu | number: '1.0-0'}}</td>
-                <td>{{oneDay.postIcuRecovery | number: '1.0-0'}}</td>
-                <td>{{oneDay.recovered | number: '1.0-0'}}</td>
-                <td>{{oneDay.dead | number: '1.0-0'}}</td>
-              </tr>
+            <tr *ngFor="let oneDay of dayTotal.slice().reverse()">
+              <td>{{oneDay.day}}</td>
+              <td>{{oneDay.doublingRate}}</td>
+              <td>{{oneDay.spreading ? 'yes' : 'no'}}</td>
+              <td *ngIf="aSymptomaticOn">{{oneDay.asymptomatic | number: '1.0-0'}}</td>
+              <td>{{oneDay.symptomatic | number: '1.0-0'}}</td>
+              <td>{{oneDay.hospital | number: '1.0-0'}}</td>
+              <td>{{oneDay.icu | number: '1.0-0'}}</td>
+              <td>{{oneDay.postIcuRecovery | number: '1.0-0'}}</td>
+              <td>{{oneDay.recovered | number: '1.0-0'}}</td>
+              <td>{{oneDay.dead | number: '1.0-0'}}</td>
+            </tr>
             </tbody>
           </table>
 
@@ -147,7 +147,8 @@
             </div>
             <div class="field-label is-normal">
               <label class="checkbox" for="showASymptomatic">show aSymptomatic
-                <input [(ngModel)]="aSymptomaticOn" id="showASymptomatic" type="checkbox" formControlName="aSymptomaticOn"/>
+                <input [(ngModel)]="aSymptomaticOn" id="showASymptomatic" type="checkbox"
+                       formControlName="aSymptomaticOn"/>
               </label>
             </div>
           </div>
@@ -170,6 +171,37 @@
             </button>
           </div>
         </form>
+        <hr />
+        <h2 class="title is-2">Progression</h2>
+        <div *ngFor="let stage of stages">
+          <hr />
+          <div class="card">
+            <header class="card-header">
+              <p class="card-header-title">{{ stage.label }}</p>
+            </header>
+            <div class="card-content">
+              <div *ngIf="stage.complete">
+                Final Stage
+              </div>
+              <div *ngIf="!stage.complete">
+                <h2>Progression: Worse</h2>
+                Stage: {{stage.getLabelFromNumber(stage.nextStageWorse)}}<br/>
+                Chance: {{stage.nextStageWorseChance}}<br/>
+                Min Time: {{stage.nextStageMinPeriod}}<br/>
+                Peak Time: {{stage.nextStagePeakPeriod}}<br/>
+                Max Time: {{stage.nextStateMaxPeriod}}<br/>
+                <hr/>
+                <h2>Progression: Better</h2>
+                Stage: {{stage.getLabelFromNumber(stage.nextStageBetter)}}<br/>
+                Chance: {{1 - stage.nextStageWorseChance}}<br/>
+                Min Time: {{stage.nextStageBetterMinPeriod}}<br/>
+                Peak Time: {{stage.nextStageBetterPeakPeriod}}<br/>
+                Max Time: {{stage.nextStateBetterMaxPeriod}}<br/>
+
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
