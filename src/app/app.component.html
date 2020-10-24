@@ -347,6 +347,26 @@
         </div>
 
         <br/>
+        <div *ngIf="started && !spreading">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-header-title">
+                Dead when spreading stopped
+              </div>
+            </div>
+            <div class="card-content big-number">
+              {{ spreadingStoppedDeath  | number: '1.0-0'}}
+            </div>
+            <div class="card-footer">
+              <div class="card-footer-item">Dead Since:</div>
+              <div class="card-footer-item">
+                {{ (today.dead - spreadingStoppedDeath)  | number: '1.0-0'}}
+              </div>
+            </div>
+          </div>
+
+          <br/>
+        </div>
 
         <div class="card">
           <div class="card-header">
@@ -392,7 +412,7 @@
               Total Ever Infected
             </div>
           </div>
-          <div class="card-content">
+          <div class="card-content big-number">
             {{ totalEverInfected | number: '1.0-0'}}
           </div>
           <div class="card-footer">

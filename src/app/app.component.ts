@@ -5,7 +5,7 @@ import {StageIdentifier} from './models/StageIdentifier';
 import {ParentStage} from './models/ParentStage';
 import {DayChanges} from './models/DayChanges';
 import {DaySummary} from './models/DaySummary';
-import { CookieService } from 'ngx-cookie-service';
+import {CookieService} from 'ngx-cookie-service';
 
 const d3 = require('d3-random');
 
@@ -160,6 +160,7 @@ export class AppComponent implements OnInit {
   public lineChartPlugins = [];
   public showDisclaimer = true;
   public showDiagram = false;
+  public spreadingStoppedDeath = 0;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -189,7 +190,7 @@ export class AppComponent implements OnInit {
     const cookieTimeout = new Date();
     cookieTimeout.setFullYear(cookieTimeout.getFullYear() + 2);
 
-    this.cookieService.set('seenDisclaimer', 'true', { expires: cookieTimeout})
+    this.cookieService.set('seenDisclaimer', 'true', {expires: cookieTimeout});
   }
 
   getDayTotal(day: number): DaySummary {
@@ -227,7 +228,6 @@ export class AppComponent implements OnInit {
     const dayTotal = this.getDayTotal(this.day);
     dayTotal.setDoublingRate(this.doublingRate);
     dayTotal.setSpreading(this.spreading);
-
     if (this.day > 1) {
       const previousDay = this.getDayTotal(this.day - 1);
       dayTotal.asymptomatic = previousDay.asymptomatic;
@@ -271,6 +271,11 @@ export class AppComponent implements OnInit {
 
     this.day++;
     this.today = dayTotal;
+
+    if ((this.yesterday && this.yesterday.spreading) && !this.today.spreading) {
+      this.spreadingStoppedDeath = this.today.dead;
+    }
+
   }
 
   calculateNewCases(previousDayTotal: number): number {
@@ -314,6 +319,7 @@ export class AppComponent implements OnInit {
     this.day = 1;
     this.totalEverInfected = 0;
     this.totalEverSymptomatic = 0;
+    this.spreadingStoppedDeath = 0;
     this.started = false;
     this.paused = false;
     this.spreading = true;
