@@ -26,13 +26,13 @@ export class Stage {
   static getLabelFromNumber(stageId: number): string {
     switch (stageId) {
       case StageIdentifier.asymptomatic:
-        return 'A-symptomatic';
+        return 'asymptomatic';
         break;
       case StageIdentifier.symptomatic:
         return 'Symptomatic';
         break;
       case StageIdentifier.recovered:
-        return 'Recovered';
+        return 'Recovery';
         break;
       case StageIdentifier.hospital:
         return 'Hospital';
