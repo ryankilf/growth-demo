@@ -9,3 +9,17 @@ div.big-number {
   font-size: 3em;
   font-weight: bold;
 }
+
+div.disclaimer-inner {
+  padding: 25px;
+  margin: 5px;
+  border: 1px solid #bbbbbb;
+}
+ul.list {
+  list-style: disc;
+  padding-left: 15px;
+  li {
+    margin-top: 10px;
+    padding-left: 15px;
+  }
+}

@@ -5,6 +5,7 @@ import {StageIdentifier} from './models/StageIdentifier';
 import {ParentStage} from './models/ParentStage';
 import {DayChanges} from './models/DayChanges';
 import {DaySummary} from './models/DaySummary';
+import { CookieService } from 'ngx-cookie-service';
 
 const d3 = require('d3-random');
 
@@ -157,9 +158,12 @@ export class AppComponent implements OnInit {
   public lineChartLegend = true;
   public lineChartType = 'line';
   public lineChartPlugins = [];
+  public showDisclaimer = true;
+  public showDiagram = false;
 
   constructor(
     private formBuilder: FormBuilder,
+    private cookieService: CookieService,
   ) {
     this.enumsToFields[StageIdentifier.asymptomatic] = 'asymptomatic';
     this.enumsToFields[StageIdentifier.symptomatic] = 'symptomatic';
@@ -168,7 +172,6 @@ export class AppComponent implements OnInit {
     this.enumsToFields[StageIdentifier.icu] = 'icu';
     this.enumsToFields[StageIdentifier.dead] = 'dead';
     this.enumsToFields[StageIdentifier.postIcuRecovery] = 'postIcuRecovery';
-
     this.settingsForm = this.formBuilder.group({
       doublingRate: this.doublingRate,
       initiallyInfected: this.initiallyInfected,
@@ -177,9 +180,16 @@ export class AppComponent implements OnInit {
       spreading: this.spreading,
       aSymptomaticOn: this.aSymptomaticOn
     });
+    if (this.cookieService.get('seenDisclaimer')) {
+      this.showDisclaimer = false;
+    }
   }
 
   ngOnInit(): void {
+    const cookieTimeout = new Date();
+    cookieTimeout.setFullYear(cookieTimeout.getFullYear() + 2);
+
+    this.cookieService.set('seenDisclaimer', 'true', { expires: cookieTimeout})
   }
 
   getDayTotal(day: number): DaySummary {
@@ -457,5 +467,9 @@ export class AppComponent implements OnInit {
 
   toggleProgression(): void {
     this.showProgression = !this.showProgression;
+  }
+
+  toggleDisclaimer(): void {
+    this.showDisclaimer = !this.showDisclaimer;
   }
 }
