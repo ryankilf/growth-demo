@@ -284,7 +284,7 @@ export class AppComponent implements OnInit {
     }
     let increaseRate = ((2 ** (1 / this.doublingRate)) - 1);
     if (this.totalEverInfected / this.population > 0.5) {
-      increaseRate = increaseRate * (1 - (this.totalEverInfected / (this.population * 0.8)));
+      increaseRate = increaseRate * (1 - (this.totalEverInfected / this.population));
     }
     if (increaseRate < 0) {
       return 0;
