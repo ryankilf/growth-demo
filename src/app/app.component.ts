@@ -26,7 +26,15 @@ export class AppComponent implements OnInit {
 
   public enumsToFields: string[] = [];
 
+  // public lineChartData: ChartDataSets[] = [];
+  public symptomaticData: number[] = [];
+  public hospitalData: number[] = [];
+  public icuData: number[] = [];
+  public recoveredData: number[] = [];
+  public deadData: number[] = [];
 
+
+  public today: DaySummary;
   public dayTotal: DaySummary[] = [];
   public dayAddition: DayChanges[] = [];
   public daySubtraction: DayChanges[] = [];
@@ -131,15 +139,24 @@ export class AppComponent implements OnInit {
       null
     ),
   ];
+  public totalEverInfected = 0;
+  public totalEverSymptomatic = 0;
   public doublingRate = 7;
   public initiallyInfected = 100;
   public population = 67500000;
-  public lengthOfDay = 0.2;
+  public lengthOfDay = 0.5;
   public spreading = true;
+
+//  public lineChartData: ChartDataSets[] = [];
 
   private interval;
   public aSymptomaticOn = false;
   public showProgression: boolean;
+  private yesterday: DaySummary;
+
+  public lineChartLegend = true;
+  public lineChartType = 'line';
+  public lineChartPlugins = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -193,6 +210,7 @@ export class AppComponent implements OnInit {
   }
 
   addDay(): void {
+    this.yesterday = this.today;
     const newCases = this.initiallyInfected;
     const dayAddition = this.getDayAddition(this.day);
     const daySubtraction = this.getDaySubtraction(this.day);
@@ -213,6 +231,8 @@ export class AppComponent implements OnInit {
     } else {
       dayAddition.asymptomatic = newCases;
     }
+
+    this.totalEverInfected += dayAddition.asymptomatic;
 
     dayTotal.asymptomatic += dayAddition.asymptomatic;
     dayTotal.asymptomatic -= daySubtraction.asymptomatic;
@@ -239,17 +259,21 @@ export class AppComponent implements OnInit {
 
     this.processAdditions();
 
-    console.log('end of day ' + this.day);
-    console.log(dayTotal);
-
     this.day++;
+    this.today = dayTotal;
   }
 
   calculateNewCases(previousDayTotal: number): number {
     if (this.spreading === false) {
       return 0;
     }
-    const increaseRate = ((2 ** (1 / this.doublingRate)) - 1);
+    let increaseRate = ((2 ** (1 / this.doublingRate)) - 1);
+    console.log('old rate ' + increaseRate);
+    increaseRate = increaseRate * (1 - (this.totalEverSymptomatic / (this.population * 0.8)));
+    console.log('new rate ' + increaseRate);
+    if (increaseRate < 0) {
+      return 0;
+    }
     return (previousDayTotal * increaseRate);
   }
 
@@ -278,10 +302,18 @@ export class AppComponent implements OnInit {
     this.dayAddition = [];
     this.daySubtraction = [];
     this.day = 1;
+    this.totalEverInfected = 0;
+    this.totalEverSymptomatic = 0;
     this.started = false;
     this.paused = false;
     this.spreading = true;
     this.showDailyTotal();
+
+    this.symptomaticData = [];
+    this.hospitalData = [];
+    this.icuData = [];
+    this.recoveredData = [];
+    this.deadData = [];
   }
 
   startInterval(): void {
@@ -308,8 +340,7 @@ export class AppComponent implements OnInit {
           numberToProcess = dayAddition.asymptomatic;
           break;
         case StageIdentifier.symptomatic:
-          console.log('symptomatic');
-          console.log(stage);
+          this.totalEverSymptomatic += dayAddition.symptomatic;
           numberToProcess = dayAddition.symptomatic;
           break;
         case StageIdentifier.recovered:
@@ -340,12 +371,12 @@ export class AppComponent implements OnInit {
         stage.nextStagePeakPeriod
       );
 
-      if (stage.id === StageIdentifier.symptomatic) {
-        console.log('numberToProcess ' + numberToProcess);
-        console.log('positive ' + betterNumber);
-        console.log('negative ' + worseNumber);
-        console.log('end');
-      }
+      // if (stage.id === StageIdentifier.symptomatic) {
+      //   console.log('numberToProcess ' + numberToProcess);
+      //   console.log('positive ' + betterNumber);
+      //   console.log('negative ' + worseNumber);
+      //   console.log('end');
+      // }
 
       distributionWorse.forEach((numberToDistribute, day) => {
         const newDayAddition = this.getDayAddition(this.day + day);
@@ -382,7 +413,6 @@ export class AppComponent implements OnInit {
     const numberOfRands = 100;
     const distributions: number[] = [];
     const valuePerSlot = total / numberOfRands;
-    const numberOfSlots = maxDays - minDays;
     for (let i = minDays; i <= maxDays; i++) {
       distributions[i] = 0;
     }

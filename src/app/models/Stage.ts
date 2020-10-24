@@ -16,10 +16,14 @@ export class Stage {
     public nextStateBetterMaxPeriod: number | null,
     public nextStageBetterPeakPeriod: number | null
   ) {
-    this.label = this.getLabelFromNumber(this.id);
+    this.label = Stage.getLabelFromNumber(this.id);
   }
 
   getLabelFromNumber(stageId: number): string {
+    return Stage.getLabelFromNumber(stageId);
+  }
+
+  static getLabelFromNumber(stageId: number): string {
     switch (stageId) {
       case StageIdentifier.asymptomatic:
         return 'A-symptomatic';

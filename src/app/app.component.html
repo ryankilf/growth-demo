@@ -11,167 +11,6 @@
   </nav>
   <div class="container main-body">
     <div class="columns">
-      <div class="column is-four-fifths">
-        <div *ngIf="started">
-          <div class="columns">
-
-            <div class="column">
-              <div class="card">
-                <div class="card-header">
-                  <div class="card-header-title">
-                    Day
-                  </div>
-                </div>
-                <div class="card-content">
-                  {{ day }}
-                </div>
-                <div class="card-footer">
-                </div>
-              </div>
-            </div>
-
-            <div class="column">
-              <div class="card">
-                <div class="card-header">
-                  <div class="card-header-title">
-                    Total Ever Infected
-                  </div>
-                </div>
-                <div class="card-content">
-                  9999
-                </div>
-                <div class="card-footer">
-                </div>
-              </div>
-            </div>
-
-            <div class="column">
-              <div class="card">
-                <div class="card-header">
-                  <div class="card-header-title">
-                    Total Ever Symptomatic
-                  </div>
-                </div>
-                <div class="card-content">
-                  9999
-                </div>
-                <div class="card-footer">
-                </div>
-              </div>
-            </div>
-
-            <div class="column">
-              <div class="card">
-                <div class="card-header">
-                  <div class="card-header-title">
-                    Days since last transmission
-                  </div>
-                </div>
-                <div class="card-content">
-                  9999
-                </div>
-                <div class="card-footer">
-                </div>
-              </div>
-            </div>
-
-            <div class="column">
-              <div class="card">
-                <div class="card-header">
-                  <div class="card-header-title">
-                    Dead
-                  </div>
-                </div>
-                <div class="card-content">
-                  9999
-                </div>
-                <div class="card-footer">
-                  Today: 9999
-                </div>
-              </div>
-            </div>
-
-
-          </div>
-          <p>Chart here</p>
-
-          <h3 class="title is-3">Tables</h3>
-          <div class="tabs is-small is-boxed">
-            <ul>
-              <li
-                [ngClass]="{'is-active' : dailyTotalOn}"
-              ><a (click)="showDailyTotal()">Daily Total</a></li>
-              <li
-                [ngClass]="{'is-active' : changesOn}"
-              ><a (click)="showChanges()">Changes</a></li>
-            </ul>
-          </div>
-          <table class="table" *ngIf="dailyTotalOn">
-            <thead>
-            <tr>
-              <th>Day</th>
-              <th>Rate</th>
-              <th>Spreading</th>
-              <th *ngIf="aSymptomaticOn">asymtomatic</th>
-              <th>symtomatic</th>
-              <th>hospital</th>
-              <th>ICU</th>
-              <th>Hospital<br />(post ICU)</th>
-              <th>recovered</th>
-              <th>dead</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let oneDay of dayTotal.slice().reverse()">
-              <td>{{oneDay.day}}</td>
-              <td>{{oneDay.doublingRate}}</td>
-              <td>{{oneDay.spreading ? 'yes' : 'no'}}</td>
-              <td *ngIf="aSymptomaticOn">{{oneDay.asymptomatic | number: '1.0-0'}}</td>
-              <td>{{oneDay.symptomatic | number: '1.0-0'}}</td>
-              <td>{{oneDay.hospital | number: '1.0-0'}}</td>
-              <td>{{oneDay.icu | number: '1.0-0'}}</td>
-              <td>{{oneDay.postIcuRecovery | number: '1.0-0'}}</td>
-              <td>{{oneDay.recovered | number: '1.0-0'}}</td>
-              <td>{{oneDay.dead | number: '1.0-0'}}</td>
-            </tr>
-            </tbody>
-          </table>
-
-          <table class="table" *ngIf="changesOn">
-            <thead>
-            <tr>
-              <th>Day</th>
-              <th>Rate</th>
-              <th>Spreading</th>
-              <th *ngIf="aSymptomaticOn">asymtomatic</th>
-              <th>symtomatic</th>
-              <th>hospital</th>
-              <th>icu</th>
-              <th>post ICU - Hospital</th>
-              <th>recovered</th>
-              <th>dead</th>
-            </tr>
-            <tr>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let oneDay of dayTotal.slice().reverse(); let i = index">
-              <td>{{oneDay.day}}</td>
-              <td>{{oneDay.doublingRate}}</td>
-              <td>{{oneDay.spreading ? 'yes' : 'no'}}</td>
-              <td *ngIf="aSymptomaticOn">
-                {{oneDay.dayAddition.asymptomatic - oneDay.daySubtraction.asymptomatic | number: '1.0-0'}}</td>
-              <td>{{oneDay.dayAddition.symptomatic - oneDay.daySubtraction.symptomatic | number: '1.0-0'}}</td>
-              <td>{{oneDay.dayAddition.hospital - oneDay.daySubtraction.hospital | number: '1.0-0'}}</td>
-              <td>{{oneDay.dayAddition.icu - oneDay.daySubtraction.icu | number: '1.0-0'}}</td>
-              <td>{{oneDay.dayAddition.postIcuRecovery - oneDay.daySubtraction.postIcuRecovery | number: '1.0-0'}}</td>
-              <td>{{oneDay.dayAddition.recovered - oneDay.daySubtraction.recovered | number: '1.0-0'}}</td>
-              <td>{{oneDay.dayAddition.dead - oneDay.daySubtraction.dead | number: '1.0-0'}}</td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
       <div class="column is-one-fifth">
         <h2 class="title is-2">Settings</h2>
         <form [formGroup]="settingsForm">
@@ -179,8 +18,8 @@
             <div class="field-label is-normal">
               <label class="label" for="initiallyInfected">Initially Infected</label>
             </div>
-            <div class="field-body">
-              <div class="field">
+            <div class="field">
+              <div class="control">
                 <input
                   [attr.disabled]="started ? '' : null"
                   [(ngModel)]="initiallyInfected"
@@ -197,8 +36,8 @@
             <div class="field-label is-normal">
               <label class="label" for="population">Population</label>
             </div>
-            <div class="field-body">
-              <div class="field">
+            <div class="field">
+              <div class="control">
                 <input
                   [attr.disabled]="started ? '' : null"
                   [(ngModel)]="population" id="population" class="input" type="number"
@@ -211,8 +50,9 @@
             <div class="field-label is-normal">
               <label class="label" for="doublingRate">Doubling Rate (days)</label>
             </div>
-            <div class="field-body">
-              <div class="field">
+            <div class="field">
+              <div class="control">
+
                 <input [(ngModel)]="doublingRate" id="doublingRate" class="input" type="number"
                        formControlName="doublingRate"/>
               </div>
@@ -223,8 +63,9 @@
             <div class="field-label is-normal">
               <label class="label" for="lengthOfDay">Length of Day (in seconds)</label>
             </div>
-            <div class="field-body">
-              <div class="field">
+            <div class="field">
+              <div class="control">
+
                 <input
                   [attr.disabled]="started && !paused ? '' : null"
                   [(ngModel)]="lengthOfDay" id="lengthOfDay" class="input" type="number"
@@ -234,16 +75,19 @@
           </div>
 
           <div class="field is-vertical">
-            <div class="field-label is-normal">
+            <div class="control">
               <label class="checkbox" for="spreading">Spreading
                 <input [(ngModel)]="spreading" id="spreading" type="checkbox" formControlName="spreading"/>
               </label>
             </div>
-            <div class="field-label is-normal">
-              <label class="checkbox" for="showASymptomatic">show aSymptomatic
-                <input [(ngModel)]="aSymptomaticOn" id="showASymptomatic" type="checkbox"
-                       formControlName="aSymptomaticOn"/>
-              </label>
+            <div class="field">
+              <div class="control">
+
+                <label class="checkbox" for="showASymptomatic">show aSymptomatic
+                  <input [(ngModel)]="aSymptomaticOn" id="showASymptomatic" type="checkbox"
+                         formControlName="aSymptomaticOn"/>
+                </label>
+              </div>
             </div>
           </div>
           <div class="buttons">
@@ -286,21 +130,186 @@
                   <h2>Progression: Worse</h2>
                   Stage: {{stage.getLabelFromNumber(stage.nextStageWorse)}}<br/>
                   Chance: {{stage.nextStageWorseChance}}<br/>
-                  Min Time: {{stage.nextStageMinPeriod}}<br/>
-                  Peak Time: {{stage.nextStagePeakPeriod}}<br/>
-                  Max Time: {{stage.nextStateMaxPeriod}}<br/>
+                  Min Days: {{stage.nextStageMinPeriod}}<br/>
+                  Peak Days: {{stage.nextStagePeakPeriod}}<br/>
+                  Max Days: {{stage.nextStateMaxPeriod}}<br/>
                   <hr/>
                   <h2>Progression: Better</h2>
                   Stage: {{stage.getLabelFromNumber(stage.nextStageBetter)}}<br/>
                   Chance: {{1 - stage.nextStageWorseChance}}<br/>
-                  Min Time: {{stage.nextStageBetterMinPeriod}}<br/>
-                  Peak Time: {{stage.nextStageBetterPeakPeriod}}<br/>
-                  Max Time: {{stage.nextStateBetterMaxPeriod}}<br/>
-
+                  Min Days: {{stage.nextStageBetterMinPeriod}}<br/>
+                  Peak Days: {{stage.nextStageBetterPeakPeriod}}<br/>
+                  Max Days: {{stage.nextStateBetterMaxPeriod}}<br/>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      <div class="column is-three-fifths">
+        <div class="tabs is-small is-boxed">
+          <ul>
+            <li
+              [ngClass]="{'is-active' : dailyTotalOn}"
+            ><a (click)="showDailyTotal()">Daily Total</a></li>
+            <li
+              [ngClass]="{'is-active' : changesOn}"
+            ><a (click)="showChanges()">Changes</a></li>
+          </ul>
+        </div>
+        <table class="table is-fullwidth is-striped" *ngIf="dailyTotalOn">
+          <thead>
+          <tr>
+            <th>Day</th>
+            <th>Rate</th>
+            <th>Spreading</th>
+            <th *ngIf="aSymptomaticOn">asymtomatic</th>
+            <th>Symtomatic</th>
+            <th>Hospital</th>
+            <th>ICU</th>
+            <th>Hospital<br/>(post ICU)</th>
+            <th>Recovered</th>
+            <th>Dead</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let oneDay of dayTotal.slice().reverse()">
+            <td>{{oneDay.day}}</td>
+            <td>{{oneDay.doublingRate}}</td>
+            <td>{{oneDay.spreading ? 'yes' : 'no'}}</td>
+            <td *ngIf="aSymptomaticOn">{{oneDay.asymptomatic | number: '1.0-0'}}</td>
+            <td>{{oneDay.symptomatic | number: '1.0-0'}}</td>
+            <td>{{oneDay.hospital | number: '1.0-0'}}</td>
+            <td>{{oneDay.icu | number: '1.0-0'}}</td>
+            <td>{{oneDay.postIcuRecovery | number: '1.0-0'}}</td>
+            <td>{{oneDay.recovered | number: '1.0-0'}}</td>
+            <td>{{oneDay.dead | number: '1.0-0'}}</td>
+          </tr>
+          </tbody>
+        </table>
+
+        <table class="table is-fullwidth is-striped" *ngIf="changesOn">
+          <thead>
+          <tr>
+            <th>Day</th>
+            <th>Rate</th>
+            <th>Spreading</th>
+            <th *ngIf="aSymptomaticOn">asymtomatic</th>
+            <th>symtomatic</th>
+            <th>hospital</th>
+            <th>icu</th>
+            <th>post ICU - Hospital</th>
+            <th>recovered</th>
+            <th>dead</th>
+          </tr>
+          <tr>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let oneDay of dayTotal.slice().reverse(); let i = index">
+            <td>{{oneDay.day}}</td>
+            <td>{{oneDay.doublingRate}}</td>
+            <td>{{oneDay.spreading ? 'yes' : 'no'}}</td>
+            <td *ngIf="aSymptomaticOn">
+              {{oneDay.dayAddition.asymptomatic - oneDay.daySubtraction.asymptomatic | number: '1.0-0'}}</td>
+            <td>{{oneDay.dayAddition.symptomatic - oneDay.daySubtraction.symptomatic | number: '1.0-0'}}</td>
+            <td>{{oneDay.dayAddition.hospital - oneDay.daySubtraction.hospital | number: '1.0-0'}}</td>
+            <td>{{oneDay.dayAddition.icu - oneDay.daySubtraction.icu | number: '1.0-0'}}</td>
+            <td>{{oneDay.dayAddition.postIcuRecovery - oneDay.daySubtraction.postIcuRecovery | number: '1.0-0'}}</td>
+            <td>{{oneDay.dayAddition.recovered - oneDay.daySubtraction.recovered | number: '1.0-0'}}</td>
+            <td>{{oneDay.dayAddition.dead - oneDay.daySubtraction.dead | number: '1.0-0'}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="column is-one-fifth">
+        <div *ngIf="started">
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-header-title">
+                Day
+              </div>
+            </div>
+            <div class="card-content big-number">
+              {{ day }}
+            </div>
+            <div class="card-footer">
+            </div>
+          </div>
+
+          <br/>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-header-title">
+                Dead
+              </div>
+            </div>
+            <div class="card-content big-number">
+              {{ today.dead  | number: '1.0-0'}}
+            </div>
+            <div class="card-footer">
+              <div class="card-footer-item">Change:</div>
+              <div class="card-footer-item">
+                {{ (today.dead - yesterday.dead)  | number: '1.0-0'}}
+              </div>
+            </div>
+          </div>
+
+          <br/>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-header-title">
+                In ICU
+              </div>
+            </div>
+            <div class="card-content big-number">
+              {{ today.icu | number: '1.0-0'}}
+            </div>
+            <div class="card-footer">
+              <div class="card-footer-item">Change:</div>
+              <div class="card-footer-item">
+                {{ (today.icu - yesterday.icu)  | number: '1.0-0'}}
+              </div>
+            </div>
+          </div>
+
+          <br/>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-header-title">
+                Total In Hospital
+              </div>
+            </div>
+            <div class="card-content big-number">
+              {{ today.getTotalHospitalised() | number: '1.0-0'}}
+            </div>
+            <div class="card-footer">
+              <div class="card-footer-item">Change:</div>
+              <div class="card-footer-item">
+                {{ (today.getTotalHospitalised() - yesterday.getTotalHospitalised())  | number: '1.0-0'}}
+              </div>
+            </div>
+          </div>
+
+          <br/>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-header-title">
+                Total Ever Infected
+              </div>
+            </div>
+            <div class="card-content">
+              {{ totalEverInfected | number: '1.0-0'}}
+            </div>
+            <div class="card-footer">
+            </div>
+          </div>
+
         </div>
       </div>
     </div>

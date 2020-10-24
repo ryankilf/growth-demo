@@ -42,4 +42,8 @@ export class DaySummary {
   getTotalInfected(): number {
     return this.asymptomatic + this.symptomatic + this.hospital + this.icu + this.postIcuRecovery;
   }
+
+  getTotalHospitalised(): number {
+    return this.hospital + this.icu + this.postIcuRecovery;
+  }
 }
