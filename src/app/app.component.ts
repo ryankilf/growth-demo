@@ -142,9 +142,9 @@ export class AppComponent implements OnInit {
   public totalEverInfected = 0;
   public totalEverSymptomatic = 0;
   public doublingRate = 7;
-  public initiallyInfected = 100;
+  public initiallyInfected = 250;
   public population = 67500000;
-  public lengthOfDay = 0.5;
+  public lengthOfDay = 0.3;
   public spreading = true;
 
 //  public lineChartData: ChartDataSets[] = [];
