@@ -2,7 +2,7 @@
 
 This application helps people understand the lag between a drop in people becoming infected, and their outcomes. 
 
-It is based on work undertaken by Katri “Kat” Manninen ( [Engish Twitter](https://twitter.com/katmanninen), [Finnish Twitter](https://twitter.com/kutrinet) ), in particular the diagram that she made demonstrating the typical progression of the disease.
+It is based on work undertaken by Katri Manninen ( [Engish Twitter](https://twitter.com/katmanninen), [Finnish Twitter](https://twitter.com/kutrinet) ), in particular the diagram that she made demonstrating the typical progression of the disease.
 
 ![Typical Progress of COVID-19](covid-typical-progress.jpeg)
 
