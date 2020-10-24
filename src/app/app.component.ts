@@ -283,9 +283,9 @@ export class AppComponent implements OnInit {
       return 0;
     }
     let increaseRate = ((2 ** (1 / this.doublingRate)) - 1);
-    console.log('old rate ' + increaseRate);
-    increaseRate = increaseRate * (1 - (this.totalEverSymptomatic / (this.population * 0.8)));
-    console.log('new rate ' + increaseRate);
+    if (this.totalEverInfected / this.population > 0.5) {
+      increaseRate = increaseRate * (1 - (this.totalEverInfected / (this.population * 0.8)));
+    }
     if (increaseRate < 0) {
       return 0;
     }
