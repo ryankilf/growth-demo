@@ -10,17 +10,21 @@
     </div>
   </nav>
   <div class="container main-body">
-    <button *ngIf="!showDisclaimer" class="button is-small" (click)="toggleDisclaimer()">
-      Show Notes &amp; Disclaimers
-    </button>
+    <div class="columns">
+      <div class="column">
+        <button *ngIf="!showDisclaimer" class="button is-small" (click)="toggleDisclaimer()">
+          Show Notes &amp; Disclaimers
+        </button>
+      </div>
+    </div>
     <div class="columns" *ngIf="showDisclaimer">
-      <div class="disclaimer-inner">
+      <div class="disclaimer-inner column">
         <h2 class="title">Notes &amp; Disclaimers</h2>
         <ul class="list">
           <li>This work is based on a diagram created by Katri “Kat” Manninen ( <a href="https://twitter.com/katmanninen" rel="nofollow">Engish Twitter</a>, <a href="https://twitter.com/kutrinet" rel="nofollow">Finnish Twitter</a> )
              demonstrating the typical progression of the disease.<br />
             <button *ngIf="!showDiagram" class="button is-small" (click)="showDiagram = true">Show diagram</button>
-            <img *ngIf="showDiagram" src="https://raw.githubusercontent.com/ryankilf/growth-demo/main/covid-typical-progress.jpeg?token=ABZBIC6SBU26ROELCF73SXC7SQWE6" />
+            <img *ngIf="showDiagram" src="/assets/img/covid-typical-progress.jpeg" />
           </li>
           <li>
             This system does represent my best efforts to accurately model the amount of time taken between stopping
