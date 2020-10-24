@@ -21,7 +21,7 @@
       <div class="disclaimer-inner column">
         <h2 class="title">Notes &amp; Disclaimers</h2>
         <ul class="list">
-          <li>This work is based on a diagram created by Katri “Kat” Manninen ( <a href="https://twitter.com/katmanninen" rel="nofollow">Engish Twitter</a>, <a href="https://twitter.com/kutrinet" rel="nofollow">Finnish Twitter</a> )
+          <li>This work is based on a diagram created by Katri “Kat” Manninen ( <a target="_blank" href="https://twitter.com/katmanninen" rel="nofollow">Engish Twitter</a>, <a target="_blank" href="https://twitter.com/kutrinet" rel="nofollow">Finnish Twitter</a> )
              demonstrating the typical progression of the disease.<br />
             <button *ngIf="!showDiagram" class="button is-small" (click)="showDiagram = true">Show diagram</button>
             <img *ngIf="showDiagram" src="/assets/img/covid-typical-progress.jpeg" />
@@ -88,7 +88,9 @@
           <li>
             It uses rounding and fractions of patients. Expect rounding errors in the results.
           </li>
-          <li>You can see the source code on <a href="https://github.com/ryankilf/growth-demo#growth-demo">github</a></li>
+          <li>You can see the source code on <a
+            target="_blank"
+            href="https://github.com/ryankilf/growth-demo#growth-demo">github</a></li>
         </ul>
         <hr />
         <button class="button is-success" (click)="toggleDisclaimer()">
