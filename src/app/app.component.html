@@ -67,20 +67,24 @@
               </li>
               <li>
                 Recoveries take a maximum of about 60 days from infection. There have been some cases where a patient
-                has been
-                unwell for an extremely long time.
+                has been unwell for an extremely long time.
+              </li>
+              <li>
+                The model assumes everyone who falls ill can receive excellent treatment no matter how busy hospitals get.
+                This is blatantly untrue, if hospitals are filled to overflowing, everyone suffers.
               </li>
             </ul>
           </li>
           <li>
-            One people start recovering or dying in the model, new cases won't quite double every n days.
+            One people start recovering or dying in the model, new cases won't quite double every _n_ days.
           </li>
           <li>
             Long Covid has not been taken account of in this model - there are a significant number of people with a
             variety of odd symptoms, which seem to last a very long time.
           </li>
           <li>
-            Everyone hopes that as treatments improve, hopefully survivability will continue to improve.
+            Everyone hopes that as treatments improve, hopefully survivability will continue to improve. There is good
+            reason to hope this.
           </li>
           <li>
             I really hope that I have to continue to tweak numbers for this tool as that happens.
@@ -172,7 +176,7 @@
           <div class="field">
             <div class="control">
 
-              <label class="checkbox" for="showASymptomatic">show aSymptomatic
+              <label class="checkbox" for="showASymptomatic">show asymptomatic
                 <input [(ngModel)]="aSymptomaticOn" id="showASymptomatic" type="checkbox"
                        formControlName="aSymptomaticOn"/>
               </label>
