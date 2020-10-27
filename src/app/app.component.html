@@ -234,6 +234,19 @@
           ><a (click)="showChanges()">Changes</a></li>
         </ul>
       </div>
+
+      <div style="display: block;" *ngIf="dailyTotalOn && this.day > 1">
+        <canvas baseChart
+                [datasets]="barChartData"
+                [labels]="barChartLabels"
+                [options]="barChartOptions"
+                [plugins]="barChartPlugins"
+                [legend]="barChartLegend"
+                [chartType]="barChartType">
+        </canvas>
+        <hr />
+      </div>
+
       <table class="table is-fullwidth is-striped" *ngIf="dailyTotalOn">
         <thead>
         <tr>
@@ -407,46 +420,48 @@
           </div>
         </div>
 
+        <hr />
+        <button class="button is-small" (click)="toggleProgression()">
+          <span *ngIf="showProgression">Hide Progression</span>
+          <span *ngIf="!showProgression">Show Progression</span>
+        </button>
+        <div id="progression-container" *ngIf="showProgression">
+          <h2 class="title is-2">Progression</h2>
+          <div *ngFor="let stage of stages">
+            <hr/>
+            <div class="card">
+              <header class="card-header">
+                <p class="card-header-title">{{ stage.label }}</p>
+              </header>
+              <div class="card-content">
+                <div *ngIf="stage.complete">
+                  Final Stage
+                </div>
+                <div *ngIf="!stage.complete">
+                  <h2>Progression: Worse</h2>
+                  Stage: {{stage.getLabelFromNumber(stage.nextStageWorse)}}<br/>
+                  Chance: {{stage.nextStageWorseChance}}<br/>
+                  Min Days: {{stage.nextStageMinPeriod}}<br/>
+                  Peak Days: {{stage.nextStagePeakPeriod}}<br/>
+                  Max Days: {{stage.nextStateMaxPeriod}}<br/>
+                  <hr/>
+                  <h2>Progression: Better</h2>
+                  Stage: {{stage.getLabelFromNumber(stage.nextStageBetter)}}<br/>
+                  Chance: {{1 - stage.nextStageWorseChance}}<br/>
+                  Min Days: {{stage.nextStageBetterMinPeriod}}<br/>
+                  Peak Days: {{stage.nextStageBetterPeakPeriod}}<br/>
+                  Max Days: {{stage.nextStateBetterMaxPeriod}}<br/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
   <div class="columns">
     <div class="column">
-      <button class="button is-small" (click)="toggleProgression()">
-        <span *ngIf="showProgression">Hide Progression</span>
-        <span *ngIf="!showProgression">Show Progression</span>
-      </button>
-      <div id="progression-container" *ngIf="showProgression">
-        <h2 class="title is-2">Progression</h2>
-        <div *ngFor="let stage of stages">
-          <hr/>
-          <div class="card">
-            <header class="card-header">
-              <p class="card-header-title">{{ stage.label }}</p>
-            </header>
-            <div class="card-content">
-              <div *ngIf="stage.complete">
-                Final Stage
-              </div>
-              <div *ngIf="!stage.complete">
-                <h2>Progression: Worse</h2>
-                Stage: {{stage.getLabelFromNumber(stage.nextStageWorse)}}<br/>
-                Chance: {{stage.nextStageWorseChance}}<br/>
-                Min Days: {{stage.nextStageMinPeriod}}<br/>
-                Peak Days: {{stage.nextStagePeakPeriod}}<br/>
-                Max Days: {{stage.nextStateMaxPeriod}}<br/>
-                <hr/>
-                <h2>Progression: Better</h2>
-                Stage: {{stage.getLabelFromNumber(stage.nextStageBetter)}}<br/>
-                Chance: {{1 - stage.nextStageWorseChance}}<br/>
-                Min Days: {{stage.nextStageBetterMinPeriod}}<br/>
-                Peak Days: {{stage.nextStageBetterPeakPeriod}}<br/>
-                Max Days: {{stage.nextStateBetterMaxPeriod}}<br/>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
       <div id="about">
         <hr/>
         <a

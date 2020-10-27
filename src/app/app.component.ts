@@ -6,7 +6,8 @@ import {ParentStage} from './models/ParentStage';
 import {DayChanges} from './models/DayChanges';
 import {DaySummary} from './models/DaySummary';
 import {CookieService} from 'ngx-cookie-service';
-
+import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
+import {Label} from 'ng2-charts';
 const d3 = require('d3-random');
 
 
@@ -141,22 +142,45 @@ export class AppComponent implements OnInit {
   ];
   public totalEverInfected = 0;
   public totalEverSymptomatic = 0;
-  public doublingRate = 5;
-  public initiallyInfected = 250;
+  public doublingRate = 7;
+  public initiallyInfected = 350;
   public population = 67500000;
   public lengthOfDay = 0.3;
   public spreading = true;
 
-//  public lineChartData: ChartDataSets[] = [];
 
   private interval;
   public aSymptomaticOn = false;
   public showProgression: boolean;
-  private yesterday: DaySummary;
+  public yesterday: DaySummary;
 
   public showDisclaimer = true;
   public showDiagram = false;
   public spreadingStoppedDeath = 0;
+
+
+
+  public barChartOptions: ChartOptions = {
+    responsive: true,
+    animation: {
+      duration: 0 // general animation time
+    },
+  };
+  public barChartLabels: Label[] = [];
+  public barChartType: ChartType = 'bar';
+  public barChartLegend = true;
+  public barChartPlugins = [];
+  public barChartSymptoms: number[] = [];
+  public barChartHospital: number[] = [];
+  public barChartIcu: number[] = [];
+  public barChartDead: number[] = [];
+
+  public barChartData: ChartDataSets[] = [
+    { data: this.barChartSymptoms, label: 'Symptoms', stack: 'a' },
+    { data: this.barChartHospital, label: 'Hospital', stack: 'a' },
+    { data: this.barChartIcu, label: 'Icu', stack: 'a' },
+    { data: this.barChartDead, label: 'dead', stack: 'a' },
+  ];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -272,6 +296,17 @@ export class AppComponent implements OnInit {
       this.spreadingStoppedDeath = this.today.dead;
     }
 
+    this.barChartLabels.push('Day ' + (this.day - 1));
+    this.barChartSymptoms.push(Math.round(this.today.symptomatic));
+    this.barChartHospital.push(Math.round(this.today.hospital + this.today.postIcuRecovery));
+    this.barChartIcu.push(Math.round(this.today.icu));
+    this.barChartDead.push(Math.round(this.today.dead));
+    this.barChartData = [
+      { data: this.barChartSymptoms, label: 'Symptoms', stack: 'a', backgroundColor: '#bbffbb' },
+      { data: this.barChartHospital, label: 'Hospital', stack: 'a', backgroundColor: '#e7a32d' },
+      { data: this.barChartIcu, label: 'Icu', stack: 'a', backgroundColor: '#e7582d' },
+      { data: this.barChartDead, label: 'dead', stack: 'a', backgroundColor: '#000000' },
+    ];
   }
 
   calculateNewCases(previousDayTotal: number): number {
@@ -326,6 +361,13 @@ export class AppComponent implements OnInit {
     this.icuData = [];
     this.recoveredData = [];
     this.deadData = [];
+
+    this.barChartLabels = [];
+    this.barChartSymptoms = [];
+    this.barChartHospital = [];
+    this.barChartIcu = [];
+    this.barChartDead = [];
+    this.barChartData = [];
   }
 
   startInterval(): void {
@@ -382,13 +424,6 @@ export class AppComponent implements OnInit {
         stage.nextStateMaxPeriod,
         stage.nextStagePeakPeriod
       );
-
-      // if (stage.id === StageIdentifier.symptomatic) {
-      //   console.log('numberToProcess ' + numberToProcess);
-      //   console.log('positive ' + betterNumber);
-      //   console.log('negative ' + worseNumber);
-      //   console.log('end');
-      // }
 
       distributionWorse.forEach((numberToDistribute, day) => {
         const newDayAddition = this.getDayAddition(this.day + day);
