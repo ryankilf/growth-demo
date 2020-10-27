@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {ReactiveFormsModule} from '@angular/forms';
+import {ChartsModule} from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import {ReactiveFormsModule} from '@angular/forms';
         AppRoutingModule,
         NoopAnimationsModule,
         ReactiveFormsModule,
+        ChartsModule,
     ],
   providers: [],
   bootstrap: [AppComponent]
