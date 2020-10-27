@@ -12,7 +12,7 @@
   <div class="container main-body">
     <div class="columns">
       <div class="column">
-        <button *ngIf="!showDisclaimer" class="button is-small" (click)="toggleDisclaimer()">
+        <button *ngIf="!showDisclaimer" class="button is-small is-pulled-right" (click)="toggleDisclaimer()">
           Show Notes &amp; Disclaimers
         </button>
       </div>
@@ -21,17 +21,21 @@
       <div class="disclaimer-inner column">
         <h2 class="title">Notes &amp; Disclaimers</h2>
         <ul class="list">
-          <li>This work is based on a diagram created by Katri Manninen ( <a target="_blank" href="https://twitter.com/katmanninen" rel="nofollow">Engish Twitter</a>, <a target="_blank" href="https://twitter.com/kutrinet" rel="nofollow">Finnish Twitter</a> )
-             demonstrating the typical progression of the disease.<br />
+          <li>This work is based on a diagram created by Katri Manninen ( <a target="_blank"
+                                                                             href="https://twitter.com/katmanninen"
+                                                                             rel="nofollow">Engish Twitter</a>, <a
+            target="_blank" href="https://twitter.com/kutrinet" rel="nofollow">Finnish Twitter</a> )
+            demonstrating the typical progression of the disease.<br/>
             <button *ngIf="!showDiagram" class="button is-small" (click)="showDiagram = true">Show diagram</button>
-            <img *ngIf="showDiagram" src="/assets/img/covid-typical-progress.jpeg" />
+            <img *ngIf="showDiagram" src="/assets/img/covid-typical-progress.jpeg"/>
           </li>
           <li>
             This system does represent my best efforts to accurately model the amount of time taken between stopping
             transmission and cases working through the phases of the disease.
           </li>
           <li>
-            The system uses a simple number of cases double every n days "model". While this is ok for ball-parking, it's
+            The system uses a simple number of cases double every n days "model". While this is ok for ball-parking,
+            it's
             not perfect.
           </li>
           <li>
@@ -50,7 +54,8 @@
           </li>
           <li>
             Stopping transmissions in the app is as simple as unticking the "Spreading" button. This is not something
-            that happens in real life. Stopping the spread even with a lockdown is not perfect, and it is also incredibly
+            that happens in real life. Stopping the spread even with a lockdown is not perfect, and it is also
+            incredibly
             difficult to do.
           </li>
           <li>
@@ -64,7 +69,8 @@
                 has been unwell for an extremely long time.
               </li>
               <li>
-                The model assumes everyone who falls ill can receive excellent treatment no matter how busy hospitals get.
+                The model assumes everyone who falls ill can receive excellent treatment no matter how busy hospitals
+                get.
                 This is blatantly untrue, if hospitals are filled to overflowing, everyone suffers.
               </li>
             </ul>
@@ -75,9 +81,11 @@
           <li>
             Infections will start to slow down, until, once all of the population has had the infection, there
             will be no more infections. Depending on the initial doubling rate new infections should grind to a halt
-            before 100% of the population has been infected. With a doubling rate of 5 days, infections stop once around 83%,
+            before 100% of the population has been infected. With a doubling rate of 5 days, infections stop once around
+            83%,
             of the population have been infected. With a doubling rate of 6 days, infections stop at around 76%.
-            <a href="https://jamanetwork.com/journals/jama/fullarticle/2769704">I don't think those numbers are ridiculous</a>,
+            <a href="https://jamanetwork.com/journals/jama/fullarticle/2769704">I don't think those numbers are
+              ridiculous</a>,
             however:
             <ul class="list">
               <li>We don't know how long someone will be immune for after they have picked up an infection</li>
@@ -104,156 +112,118 @@
             target="_blank"
             href="https://github.com/ryankilf/growth-demo#growth-demo">github</a></li>
         </ul>
-        <hr />
+        <hr/>
         <button class="button is-success" (click)="toggleDisclaimer()">
           Hide Notes &amp; Disclaimers
         </button>
       </div>
     </div>
   </div>
-  <div class="columns">
-    <div class="column">
-      <h2 class="title is-2">Settings</h2>
-      <form [formGroup]="settingsForm">
-        <div class="field is-vertical">
-          <div class="field-label is-normal">
-            <label class="label" for="initiallyInfected">Initially Infected</label>
-          </div>
-          <div class="field">
-            <div class="control">
-              <input
-                [attr.disabled]="started ? '' : null"
-                [(ngModel)]="initiallyInfected"
-                id="initiallyInfected"
-                class="input"
-                type="number"
-                formControlName="initiallyInfected"
-              />
-            </div>
-          </div>
-        </div>
+  <h2 class="title is-2">Settings</h2>
+  <div [formGroup]="settingsForm">
 
-        <div class="field is-vertical">
-          <div class="field-label is-normal">
-            <label class="label" for="population">Population</label>
-          </div>
-          <div class="field">
-            <div class="control">
-              <input
-                [attr.disabled]="started ? '' : null"
-                [(ngModel)]="population" id="population" class="input" type="number"
-                formControlName="population"/>
-            </div>
-          </div>
-        </div>
-
-        <div class="field is-vertical">
-          <div class="field-label is-normal">
-            <label class="label" for="doublingRate">Doubling Rate (days)</label>
-          </div>
-          <div class="field">
-            <div class="control">
-
-              <input [(ngModel)]="doublingRate" id="doublingRate" class="input" type="number"
-                     formControlName="doublingRate"/>
-            </div>
-          </div>
-        </div>
-
-        <div class="field is-vertical">
-          <div class="field-label is-normal">
-            <label class="label" for="lengthOfDay">Length of Day (in seconds)</label>
-          </div>
-          <div class="field">
-            <div class="control">
-
-              <input
-                [attr.disabled]="started && !paused ? '' : null"
-                [(ngModel)]="lengthOfDay" id="lengthOfDay" class="input" type="number"
-                formControlName="lengthOfDay"/>
-            </div>
-          </div>
-        </div>
-
-        <div class="field is-vertical">
+    <div class="columns is-flex">
+      <div class="field is-vertical column is-one-third">
+        <label class="label" for="initiallyInfected">Initially Infected</label>
+        <div class="field">
           <div class="control">
-            <label class="checkbox" for="spreading">Spreading
-              <input [(ngModel)]="spreading" id="spreading" type="checkbox" formControlName="spreading"/>
-            </label>
-          </div>
-          <div class="field">
-            <div class="control">
-
-              <label class="checkbox" for="showASymptomatic">show asymptomatic
-                <input [(ngModel)]="aSymptomaticOn" id="showASymptomatic" type="checkbox"
-                       formControlName="aSymptomaticOn"/>
-              </label>
-            </div>
-          </div>
-        </div>
-        <div class="buttons">
-          <button
-            *ngIf="!started"
-            class="button is-success" (click)="start()">Start
-          </button>
-          <button
-            *ngIf="started && !paused"
-            class="button is-warning" (click)="pause()">Pause
-          </button>
-          <button
-            *ngIf="started && paused"
-            class="button is-warning" (click)="continue()">Continue
-          </button>
-          <button
-            *ngIf="started && paused"
-            class="button is-danger" (click)="reset()">Reset
-          </button>
-        </div>
-      </form>
-      <hr/>
-      <button class="button is-small" (click)="toggleProgression()">
-        <span *ngIf="showProgression">Hide Progression</span>
-        <span *ngIf="!showProgression">Show Progression</span>
-      </button>
-      <div id="progression-container" *ngIf="showProgression">
-        <h2 class="title is-2">Progression</h2>
-        <div *ngFor="let stage of stages">
-          <hr/>
-          <div class="card">
-            <header class="card-header">
-              <p class="card-header-title">{{ stage.label }}</p>
-            </header>
-            <div class="card-content">
-              <div *ngIf="stage.complete">
-                Final Stage
-              </div>
-              <div *ngIf="!stage.complete">
-                <h2>Progression: Worse</h2>
-                Stage: {{stage.getLabelFromNumber(stage.nextStageWorse)}}<br/>
-                Chance: {{stage.nextStageWorseChance}}<br/>
-                Min Days: {{stage.nextStageMinPeriod}}<br/>
-                Peak Days: {{stage.nextStagePeakPeriod}}<br/>
-                Max Days: {{stage.nextStateMaxPeriod}}<br/>
-                <hr/>
-                <h2>Progression: Better</h2>
-                Stage: {{stage.getLabelFromNumber(stage.nextStageBetter)}}<br/>
-                Chance: {{1 - stage.nextStageWorseChance}}<br/>
-                Min Days: {{stage.nextStageBetterMinPeriod}}<br/>
-                Peak Days: {{stage.nextStageBetterPeakPeriod}}<br/>
-                Max Days: {{stage.nextStateBetterMaxPeriod}}<br/>
-              </div>
-            </div>
+            <input
+              [attr.disabled]="started ? '' : null"
+              [(ngModel)]="initiallyInfected"
+              id="initiallyInfected"
+              class="input"
+              type="number"
+              formControlName="initiallyInfected"
+            />
           </div>
         </div>
       </div>
-      <div id="about">
-        <hr />
-        <a
-          onclick="window.open(this.href); return false;"
-          href="https://github.com/ryankilf/growth-demo/blob/main/LICENSE.md">&copy; 2020 Ryan Kilfedder.</a>
+
+      <div class="field is-vertical  column is-one-third">
+        <label class="label" for="population">Population</label>
+        <div class="field">
+          <div class="control">
+            <input
+              [attr.disabled]="started ? '' : null"
+              [(ngModel)]="population" id="population" class="input" type="number"
+              formControlName="population"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="field is-vertical  column is-one-quarter">
+        <label class="label" for="doublingRate">Doubling rate</label>
+        <div class="field">
+          <div class="control">
+
+            <input [(ngModel)]="doublingRate" id="doublingRate" class="input" type="number"
+                   formControlName="doublingRate"/>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="column is-three-fifths">
+    <div class="columns is-flex">
+      <div class="field is-vertical column  is-one-third">
+        <label class="label" for="lengthOfDay">Length of Day (in seconds)</label>
+        <div class="field">
+          <div class="control">
+
+            <input
+              [attr.disabled]="started && !paused ? '' : null"
+              [(ngModel)]="lengthOfDay" id="lengthOfDay" class="input" type="number"
+              formControlName="lengthOfDay"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="buttons column is-one-quarter">
+        <div class="label">&nbsp;</div>
+
+        <button
+          *ngIf="!started"
+          class="button is-success is-small" (click)="start()">Start
+        </button>
+        <button
+          *ngIf="started && !paused"
+          class="button is-warning is-small" (click)="pause()">Pause
+        </button>
+        <button
+          *ngIf="started && paused"
+          class="button is-warning is-small" (click)="continue()">Continue
+        </button>
+        <button
+          *ngIf="started && paused"
+          class="button is-danger is-small" (click)="reset()">Reset
+        </button>
+        <div class="field">
+          <div class="control">
+
+            <label class="checkbox" for="showASymptomatic">show asymptomatic
+              <input [(ngModel)]="aSymptomaticOn" id="showASymptomatic" type="checkbox"
+                     checked="checked"
+                     formControlName="aSymptomaticOn"/>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="field is-vertical  column is-one-third is-pulled-right">
+        <label class="label">&nbsp;</label>
+        <div class="control">
+          <div *ngIf="started">
+            <button class="button is-success  is-pulled-right" *ngIf="spreading" (click)="spreading = !spreading">
+              Instantly, as if by magic, stop spreading
+            </button>
+            <button class="button is-danger  is-pulled-right" *ngIf="!spreading" (click)="spreading = !spreading">
+              Start Spreading again
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="columns">
+    <div class="column is-three-quarters">
       <div class="tabs is-small is-boxed">
         <ul>
           <li
@@ -437,6 +407,51 @@
           </div>
         </div>
 
+      </div>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="column">
+      <button class="button is-small" (click)="toggleProgression()">
+        <span *ngIf="showProgression">Hide Progression</span>
+        <span *ngIf="!showProgression">Show Progression</span>
+      </button>
+      <div id="progression-container" *ngIf="showProgression">
+        <h2 class="title is-2">Progression</h2>
+        <div *ngFor="let stage of stages">
+          <hr/>
+          <div class="card">
+            <header class="card-header">
+              <p class="card-header-title">{{ stage.label }}</p>
+            </header>
+            <div class="card-content">
+              <div *ngIf="stage.complete">
+                Final Stage
+              </div>
+              <div *ngIf="!stage.complete">
+                <h2>Progression: Worse</h2>
+                Stage: {{stage.getLabelFromNumber(stage.nextStageWorse)}}<br/>
+                Chance: {{stage.nextStageWorseChance}}<br/>
+                Min Days: {{stage.nextStageMinPeriod}}<br/>
+                Peak Days: {{stage.nextStagePeakPeriod}}<br/>
+                Max Days: {{stage.nextStateMaxPeriod}}<br/>
+                <hr/>
+                <h2>Progression: Better</h2>
+                Stage: {{stage.getLabelFromNumber(stage.nextStageBetter)}}<br/>
+                Chance: {{1 - stage.nextStageWorseChance}}<br/>
+                Min Days: {{stage.nextStageBetterMinPeriod}}<br/>
+                Peak Days: {{stage.nextStageBetterPeakPeriod}}<br/>
+                Max Days: {{stage.nextStateBetterMaxPeriod}}<br/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="about">
+        <hr/>
+        <a
+          onclick="window.open(this.href); return false;"
+          href="https://github.com/ryankilf/growth-demo/blob/main/LICENSE.md">&copy; 2020 Ryan Kilfedder.</a>
       </div>
     </div>
   </div>

@@ -27,7 +27,6 @@ export class AppComponent implements OnInit {
 
   public enumsToFields: string[] = [];
 
-  // public lineChartData: ChartDataSets[] = [];
   public symptomaticData: number[] = [];
   public hospitalData: number[] = [];
   public icuData: number[] = [];
@@ -155,9 +154,6 @@ export class AppComponent implements OnInit {
   public showProgression: boolean;
   private yesterday: DaySummary;
 
-  public lineChartLegend = true;
-  public lineChartType = 'line';
-  public lineChartPlugins = [];
   public showDisclaimer = true;
   public showDiagram = false;
   public spreadingStoppedDeath = 0;
