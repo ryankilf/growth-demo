@@ -195,16 +195,6 @@
           *ngIf="started && paused"
           class="button is-danger is-small" (click)="reset()">Reset
         </button>
-        <div class="field">
-          <div class="control">
-
-            <label class="checkbox" for="showASymptomatic">show asymptomatic
-              <input [(ngModel)]="aSymptomaticOn" id="showASymptomatic" type="checkbox"
-                     checked="checked"
-                     formControlName="aSymptomaticOn"/>
-            </label>
-          </div>
-        </div>
       </div>
       <div class="field is-vertical  column is-one-third is-pulled-right">
         <label class="label">&nbsp;</label>
@@ -246,7 +236,16 @@
         </canvas>
         <hr />
       </div>
+      <div class="field">
+        <div class="control" [formGroup]="settingsForm">
 
+          <label class="checkbox" for="showASymptomatic">show asymptomatic
+            <input [(ngModel)]="aSymptomaticOn" id="showASymptomatic" type="checkbox"
+                   checked="checked"
+                   formControlName="aSymptomaticOn"/>
+          </label>
+        </div>
+      </div>
       <table class="table is-fullwidth is-striped" *ngIf="dailyTotalOn">
         <thead>
         <tr>

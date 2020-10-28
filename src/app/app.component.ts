@@ -302,10 +302,43 @@ export class AppComponent implements OnInit {
     this.barChartIcu.push(Math.round(this.today.icu));
     this.barChartDead.push(Math.round(this.today.dead));
     this.barChartData = [
-      { data: this.barChartSymptoms, label: 'Symptoms', stack: 'a', backgroundColor: '#bbffbb' },
-      { data: this.barChartHospital, label: 'Hospital', stack: 'a', backgroundColor: '#e7a32d' },
-      { data: this.barChartIcu, label: 'Icu', stack: 'a', backgroundColor: '#e7582d' },
-      { data: this.barChartDead, label: 'dead', stack: 'a', backgroundColor: '#000000' },
+      {
+        data: this.barChartSymptoms,
+        label: 'Symptoms',
+        stack: 'a',
+        backgroundColor: '#88cc88',
+        borderColor: '#88cc88',
+        hoverBackgroundColor: '#eeffee',
+        borderWidth: 0,
+        hoverBorderWidth: 0
+      },
+      {
+        data: this.barChartHospital,
+        label: 'Hospital',
+        stack: 'a',
+        backgroundColor: '#e7a32d',
+        hoverBackgroundColor: '#fac54f',
+        borderWidth: 0,
+        hoverBorderWidth: 0
+      },
+      {
+        data: this.barChartIcu,
+        label: 'Icu',
+        stack: 'a',
+        backgroundColor: '#e7582d',
+        hoverBackgroundColor: '#f97a4f',
+        borderWidth: 0,
+        hoverBorderWidth: 0
+      },
+      {
+        data: this.barChartDead,
+        label: 'dead',
+        stack: 'a',
+        backgroundColor: '#000000',
+        hoverBackgroundColor: '#555555',
+        borderWidth: 0,
+        hoverBorderWidth: 0
+      },
     ];
   }
 
