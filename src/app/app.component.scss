@@ -1,5 +1,12 @@
 @import "../../node_modules/bulma/css/bulma";
 
+.force-to-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
 div.main-body {
   margin-top: 2em;
 }
@@ -8,6 +15,14 @@ div.big-number {
   text-align: center;
   font-size: 3em;
   font-weight: bold;
+}
+
+div.worse {
+  color: #aa0000;
+}
+
+div.better {
+  color: #00aa00;
 }
 
 div.disclaimer-inner {

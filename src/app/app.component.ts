@@ -8,6 +8,7 @@ import {DaySummary} from './models/DaySummary';
 import {CookieService} from 'ngx-cookie-service';
 import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
 import {Label} from 'ng2-charts';
+
 const d3 = require('d3-random');
 
 
@@ -159,7 +160,6 @@ export class AppComponent implements OnInit {
   public spreadingStoppedDeath = 0;
 
 
-
   public barChartOptions: ChartOptions = {
     responsive: true,
     animation: {
@@ -176,11 +176,16 @@ export class AppComponent implements OnInit {
   public barChartDead: number[] = [];
 
   public barChartData: ChartDataSets[] = [
-    { data: this.barChartSymptoms, label: 'Symptoms', stack: 'a' },
-    { data: this.barChartHospital, label: 'Hospital', stack: 'a' },
-    { data: this.barChartIcu, label: 'Icu', stack: 'a' },
-    { data: this.barChartDead, label: 'dead', stack: 'a' },
+    {data: this.barChartSymptoms, label: 'Symptoms', stack: 'a'},
+    {data: this.barChartHospital, label: 'Hospital', stack: 'a'},
+    {data: this.barChartIcu, label: 'Icu', stack: 'a'},
+    {data: this.barChartDead, label: 'dead', stack: 'a'},
   ];
+  public daySpreadingStopped: DaySummary;
+  public daySpreadingStoppedAdditions: DayChanges;
+  public peakDeaths: DayChanges = new DayChanges(0);
+  peakIcu: DaySummary = new DaySummary(0);
+  peakHospitalised: DaySummary = new DaySummary(0);
 
   constructor(
     private formBuilder: FormBuilder,
@@ -293,7 +298,20 @@ export class AppComponent implements OnInit {
     this.today = dayTotal;
 
     if ((this.yesterday && this.yesterday.spreading) && !this.today.spreading) {
-      this.spreadingStoppedDeath = this.today.dead;
+      this.daySpreadingStopped = this.today;
+      this.daySpreadingStoppedAdditions = dayAddition;
+    }
+
+    if (dayAddition.dead > this.peakDeaths.dead) {
+      this.peakDeaths = dayAddition;
+    }
+
+    if (this.today.icu > this.peakIcu.icu) {
+      this.peakIcu = this.today;
+    }
+
+    if (this.today.getTotalHospitalised() > this.peakHospitalised.getTotalHospitalised()) {
+      this.peakHospitalised = this.today;
     }
 
     this.barChartLabels.push('Day ' + (this.day - 1));
@@ -401,6 +419,12 @@ export class AppComponent implements OnInit {
     this.barChartIcu = [];
     this.barChartDead = [];
     this.barChartData = [];
+
+    this.daySpreadingStopped = new DaySummary(0);
+    this.peakDeaths = new DayChanges(0);
+    this.peakHospitalised = new DaySummary(0);
+    this.peakIcu = new DaySummary(0);
+    this.daySpreadingStoppedAdditions = new DayChanges(0);
   }
 
   startInterval(): void {

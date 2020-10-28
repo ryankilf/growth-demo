@@ -46,4 +46,8 @@ export class DaySummary {
   getTotalHospitalised(): number {
     return this.hospital + this.icu + this.postIcuRecovery;
   }
+
+  getTotalHospitalisedNonIcu(): number {
+    return this.hospital + this.postIcuRecovery;
+  }
 }

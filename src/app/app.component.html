@@ -1,6 +1,6 @@
 <section class="section">
 
-  <nav class="navbar is-fixed-top has-background-dark" role="navigation" aria-label="main navigation">
+  <nav class="navbar force-to-top has-background-dark" role="navigation" aria-label="main navigation">
 
     <div class="container">
 
@@ -121,9 +121,8 @@
   </div>
   <h2 class="title is-2">Settings</h2>
   <div [formGroup]="settingsForm">
-
-    <div class="columns is-flex">
-      <div class="field is-vertical column is-one-third">
+    <div class="columns">
+      <div class="field is-vertical column is-one-third ">
         <label class="label" for="initiallyInfected">Initially Infected</label>
         <div class="field">
           <div class="control">
@@ -138,8 +137,7 @@
           </div>
         </div>
       </div>
-
-      <div class="field is-vertical  column is-one-third">
+      <div class="field is-vertical column is-one-third ">
         <label class="label" for="population">Population</label>
         <div class="field">
           <div class="control">
@@ -150,8 +148,7 @@
           </div>
         </div>
       </div>
-
-      <div class="field is-vertical  column is-one-quarter">
+      <div class="field is-vertical column is-one-quarter ">
         <label class="label" for="doublingRate">Doubling rate</label>
         <div class="field">
           <div class="control">
@@ -163,7 +160,7 @@
       </div>
     </div>
     <div class="columns is-flex">
-      <div class="field is-vertical column  is-one-third">
+      <div class="field is-vertical column  is-one-quarter">
         <label class="label" for="lengthOfDay">Length of Day (in seconds)</label>
         <div class="field">
           <div class="control">
@@ -176,7 +173,7 @@
         </div>
       </div>
 
-      <div class="buttons column is-one-quarter">
+      <div class="buttons column is-one-third ">
         <div class="label">&nbsp;</div>
 
         <button
@@ -212,6 +209,7 @@
     </div>
   </div>
 
+
   <div class="columns">
     <div class="column is-three-quarters">
       <div class="tabs is-small is-boxed">
@@ -224,26 +222,168 @@
           ><a (click)="showChanges()">Changes</a></li>
         </ul>
       </div>
-
-      <div style="display: block;" *ngIf="dailyTotalOn && this.day > 1">
-        <canvas baseChart
-                [datasets]="barChartData"
-                [labels]="barChartLabels"
-                [options]="barChartOptions"
-                [plugins]="barChartPlugins"
-                [legend]="barChartLegend"
-                [chartType]="barChartType">
-        </canvas>
-        <hr />
+      <div class="columns" *ngIf="started && !spreading">
+        <div class="column is-6-mobile">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-header-title">
+                Spread Stopped Day:
+              </div>
+            </div>
+            <div class="card-content big-number">
+              {{ daySpreadingStopped.day}}
+            </div>
+            <div class="card-header">
+              <div class="card-header-title">
+                Deaths
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="card-footer-item">Total</div>
+            </div>
+            <div class="card-content big-number" *ngIf="this.yesterday">
+              <div class="card-content">
+                {{ this.today.dead  | number: '1.0-0'}}
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="card-footer-item">When Spread Stopped</div>
+            </div>
+            <div class="card-footer">
+              <div class="card-footer-item">Number</div>
+              <div class="card-footer-item">{{ daySpreadingStopped.dead | number: '1.0-0'}}</div>
+            </div>
+          </div>
+        </div>
+        <div class="column is-6-mobile">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-header-title">
+                Deaths
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="card-footer-item">Today</div>
+            </div>
+            <div class="card-content big-number" *ngIf="this.yesterday">
+              <div class="card-content" [ngClass]="
+                 {
+                 'worse' : today.dayAddition.dead > yesterday.dayAddition.dead,
+                 'better' : today.dayAddition.dead < yesterday.dayAddition.dead
+                 }">
+                {{ today.dayAddition.dead | number: '1.0-0'}}
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="card-footer-item">Death Peak Day</div>
+            </div>
+            <div class="card-footer">
+              <div class="card-footer-item">Day:<br/>{{ peakDeaths.day}}</div>
+              <div class="card-footer-item">Number:<br/>{{ peakDeaths.dead | number: '1.0-0'}}</div>
+            </div>
+            <div class="card-footer">
+              <div class="card-footer-item">When Spread Stopped</div>
+            </div>
+            <div class="card-footer">
+              <div class="card-footer-item">Day:<br/> {{ daySpreadingStopped.day - peakDeaths.day}}</div>
+              <div class="card-footer-item">Number:<br/>{{ daySpreadingStoppedAdditions.dead | number: '1.0-0'}}</div>
+            </div>
+          </div>
+        </div>
+        <div class="column is-6-mobile">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-header-title">
+                ICU
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="card-footer-item">Today</div>
+            </div>
+            <div class="card-content big-number" *ngIf="this.yesterday"
+                 [ngClass]="
+                 {
+                 'worse' : yesterday.icu < today.icu,
+                 'better' : yesterday.icu > today.icu
+                 }">
+              {{ this.today.icu  | number: '1.0-0'}}
+            </div>
+            <div class="card-footer">
+              <div class="card-footer-item">ICU Peak Day</div>
+            </div>
+            <div class="card-footer">
+              <div class="card-footer-item">Day:<br/>{{ peakIcu.day}}</div>
+              <div class="card-footer-item">Number:<br/>{{ peakIcu.icu | number: '1.0-0'}}</div>
+            </div>
+            <div class="card-footer">
+              <div class="card-footer-item">When Spread Stopped</div>
+            </div>
+            <div class="card-footer">
+              <div class="card-footer-item">Day:<br/> {{daySpreadingStopped.day - peakIcu.day}}</div>
+              <div class="card-footer-item">Number:<br/>{{ daySpreadingStopped.icu | number: '1.0-0'}}</div>
+            </div>
+          </div>
+        </div>
+        <div class="column is-6-mobile">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-header-title">
+                Hospital
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="card-footer-item">Today</div>
+            </div>
+            <div class="card-content big-number" *ngIf="this.yesterday"
+                 [ngClass]="
+                 {
+                 'worse' : yesterday.getTotalHospitalisedNonIcu() < today.getTotalHospitalisedNonIcu(),
+                 'better' : yesterday.getTotalHospitalisedNonIcu() > today.getTotalHospitalisedNonIcu()
+                 }">
+              {{ this.today.getTotalHospitalisedNonIcu()  | number: '1.0-0'}}
+            </div>
+            <div class="card-footer">
+              <div class="card-footer-item">Hospital Peak Day</div>
+            </div>
+            <div class="card-footer">
+              <div class="card-footer-item">Day:<br/>{{ peakHospitalised.day}}</div>
+              <div class="card-footer-item">
+                Number:<br/>{{ peakHospitalised.getTotalHospitalisedNonIcu() | number: '1.0-0'}}</div>
+            </div>
+            <div class="card-footer">
+              <div class="card-footer-item">When Spread Stopped</div>
+            </div>
+            <div class="card-footer">
+              <div class="card-footer-item">Day:<br/> {{daySpreadingStopped.day - peakIcu.day}}</div>
+              <div class="card-footer-item">
+                Number:<br/>{{ daySpreadingStopped.getTotalHospitalisedNonIcu() | number: '1.0-0'}}</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="field">
-        <div class="control" [formGroup]="settingsForm">
+      <div class="columns">
+        <div class="column">
+          <div style="display: block;" *ngIf="dailyTotalOn && this.day > 1">
+            <canvas baseChart
+                    [datasets]="barChartData"
+                    [labels]="barChartLabels"
+                    [options]="barChartOptions"
+                    [plugins]="barChartPlugins"
+                    [legend]="barChartLegend"
+                    [chartType]="barChartType">
+            </canvas>
+            <hr/>
+          </div>
+          <div class="field">
+            <div class="control" [formGroup]="settingsForm">
 
-          <label class="checkbox" for="showASymptomatic">show asymptomatic
-            <input [(ngModel)]="aSymptomaticOn" id="showASymptomatic" type="checkbox"
-                   checked="checked"
-                   formControlName="aSymptomaticOn"/>
-          </label>
+              <label class="checkbox" for="showASymptomatic">show asymptomatic
+                <input [(ngModel)]="aSymptomaticOn" id="showASymptomatic" type="checkbox"
+                       checked="checked"
+                       formControlName="aSymptomaticOn"/>
+              </label>
+            </div>
+          </div>
         </div>
       </div>
       <table class="table is-fullwidth is-striped" *ngIf="dailyTotalOn">
@@ -340,33 +480,13 @@
           </div>
           <div class="card-footer">
             <div class="card-footer-item">Change:</div>
-            <div class="card-footer-item">
+            <div class="card-footer-item" *ngIf="yesterday">
               {{ (today.dead - yesterday.dead)  | number: '1.0-0'}}
             </div>
           </div>
         </div>
 
         <br/>
-        <div *ngIf="started && !spreading">
-          <div class="card">
-            <div class="card-header">
-              <div class="card-header-title">
-                Dead when spreading stopped
-              </div>
-            </div>
-            <div class="card-content big-number">
-              {{ spreadingStoppedDeath  | number: '1.0-0'}}
-            </div>
-            <div class="card-footer">
-              <div class="card-footer-item">Dead Since:</div>
-              <div class="card-footer-item">
-                {{ (today.dead - spreadingStoppedDeath)  | number: '1.0-0'}}
-              </div>
-            </div>
-          </div>
-
-          <br/>
-        </div>
 
         <div class="card">
           <div class="card-header">
@@ -379,7 +499,7 @@
           </div>
           <div class="card-footer">
             <div class="card-footer-item">Change:</div>
-            <div class="card-footer-item">
+            <div class="card-footer-item" *ngIf="yesterday">
               {{ (today.icu - yesterday.icu)  | number: '1.0-0'}}
             </div>
           </div>
@@ -398,7 +518,7 @@
           </div>
           <div class="card-footer">
             <div class="card-footer-item">Change:</div>
-            <div class="card-footer-item">
+            <div class="card-footer-item" *ngIf="yesterday">
               {{ (today.getTotalHospitalised() - yesterday.getTotalHospitalised())  | number: '1.0-0'}}
             </div>
           </div>
@@ -419,7 +539,7 @@
           </div>
         </div>
 
-        <hr />
+        <hr/>
         <button class="button is-small" (click)="toggleProgression()">
           <span *ngIf="showProgression">Hide Progression</span>
           <span *ngIf="!showProgression">Show Progression</span>
