@@ -390,9 +390,9 @@ export class AppComponent implements OnInit {
     if (!this.rZeroAdditions.hasOwnProperty(this.day)) {
       return 0;
     }
-    let newNumber = (this.rZeroAdditions[this.day] * this.r);
-    newNumber = newNumber * (1 - ((newNumber + this.totalEverInfected) / this.population));
-    return Math.max(newNumber, 0);
+    const newNumber = (this.rZeroAdditions[this.day] * this.r);
+    const realNewNumber = newNumber * (1 - ((newNumber + this.totalEverInfected) / this.population));
+    return Math.max(realNewNumber, 0);
   }
 
   start(): void {
@@ -416,6 +416,7 @@ export class AppComponent implements OnInit {
   }
 
   reset(): void {
+    clearInterval(this.interval);
     this.dayTotal = [];
     this.dayAddition = [];
     this.daySubtraction = [];
@@ -445,7 +446,7 @@ export class AppComponent implements OnInit {
   startInterval(): void {
     this.interval = setInterval(() => {
       this.addDay();
-    }, this.lengthOfDay * 1000);
+    }, Math.max(this.lengthOfDay * 1000, 100));
   }
 
   processAdditions(): void {
