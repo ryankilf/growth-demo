@@ -149,12 +149,12 @@
         </div>
       </div>
       <div class="field is-vertical column is-one-quarter ">
-        <label class="label" for="doublingRate">Doubling rate</label>
+        <label class="label" for="r">R0</label>
         <div class="field">
           <div class="control">
 
-            <input [(ngModel)]="doublingRate" id="doublingRate" class="input" type="number"
-                   formControlName="doublingRate"/>
+            <input [(ngModel)]="r" id="r" class="input" type="number" step="0.1"
+                   formControlName="r"/>
           </div>
         </div>
       </div>
@@ -404,7 +404,7 @@
         <tbody>
         <tr *ngFor="let oneDay of dayTotal.slice().reverse()">
           <td>{{oneDay.day}}</td>
-          <td>{{oneDay.doublingRate}}</td>
+          <td>{{oneDay.r}}</td>
           <td>{{oneDay.spreading ? 'yes' : 'no'}}</td>
           <td *ngIf="aSymptomaticOn">{{oneDay.asymptomatic | number: '1.0-0'}}</td>
           <td>{{oneDay.symptomatic | number: '1.0-0'}}</td>
@@ -437,7 +437,7 @@
         <tbody>
         <tr *ngFor="let oneDay of dayTotal.slice().reverse(); let i = index">
           <td>{{oneDay.day}}</td>
-          <td>{{oneDay.doublingRate}}</td>
+          <td>{{oneDay.r}}</td>
           <td>{{oneDay.spreading ? 'yes' : 'no'}}</td>
           <td *ngIf="aSymptomaticOn">
             {{oneDay.dayAddition.asymptomatic - oneDay.daySubtraction.asymptomatic | number: '1.0-0'}}</td>

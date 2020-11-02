@@ -8,7 +8,7 @@ export class DaySummary {
   public icu: number;
   public dead: number;
   public postIcuRecovery: number;
-  public doublingRate?: number;
+  public r?: number;
   public spreading: boolean;
   public dayAddition: DayChanges;
   public daySubtraction: DayChanges;
@@ -30,8 +30,9 @@ export class DaySummary {
   setSubtractions(subtractions: DayChanges): void {
     this.daySubtraction = subtractions;
   }
-  setDoublingRate(doublingRate: number): void {
-    this.doublingRate = doublingRate;
+
+  setR(r: number): void {
+    this.r = r;
   }
 
   setSpreading(spreading: boolean): void {
