@@ -441,6 +441,7 @@ export class AppComponent implements OnInit {
     this.peakHospitalised = new DaySummary(0);
     this.peakIcu = new DaySummary(0);
     this.daySpreadingStoppedAdditions = new DayChanges(0);
+    this.rZeroAdditions = [];
   }
 
   startInterval(): void {
