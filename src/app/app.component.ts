@@ -29,11 +29,6 @@ export class AppComponent implements OnInit {
 
   public enumsToFields: string[] = [];
 
-  public symptomaticData: number[] = [];
-  public hospitalData: number[] = [];
-  public icuData: number[] = [];
-  public recoveredData: number[] = [];
-  public deadData: number[] = [];
   public rZeroAdditions: number[] = [];
 
   public today: DaySummary;
@@ -174,13 +169,17 @@ export class AppComponent implements OnInit {
   public barChartHospital: number[] = [];
   public barChartIcu: number[] = [];
   public barChartDead: number[] = [];
+  public barChartR: number[] = [];
+
 
   public barChartData: ChartDataSets[] = [
     {data: this.barChartSymptoms, label: 'Symptoms', stack: 'a'},
     {data: this.barChartHospital, label: 'Hospital', stack: 'a'},
     {data: this.barChartIcu, label: 'Icu', stack: 'a'},
     {data: this.barChartDead, label: 'dead', stack: 'a'},
+    {data: this.barChartR, label: 'R', stack: 'b'},
   ];
+
   public daySpreadingStopped: DaySummary;
   public daySpreadingStoppedAdditions: DayChanges;
   public peakDeaths: DayChanges = new DayChanges(0);
@@ -321,6 +320,7 @@ export class AppComponent implements OnInit {
     this.barChartHospital.push(Math.round(this.today.hospital + this.today.postIcuRecovery));
     this.barChartIcu.push(Math.round(this.today.icu));
     this.barChartDead.push(Math.round(this.today.dead));
+    this.barChartR.push(this.today.r);
     this.barChartData = [
       {
         data: this.barChartSymptoms,
@@ -352,13 +352,23 @@ export class AppComponent implements OnInit {
       },
       {
         data: this.barChartDead,
-        label: 'dead',
+        label: 'Dead',
         stack: 'a',
         backgroundColor: '#000000',
         hoverBackgroundColor: '#555555',
         borderWidth: 0,
         hoverBorderWidth: 0
       },
+      // {
+      //   data: this.barChartR,
+      //   label: 'R',
+      //   stack: 'b',
+      //   type: 'line',
+      //   backgroundColor: '#7777ee',
+      //   hoverBackgroundColor: '#7777ee',
+      //   borderWidth: 0,
+      //   hoverBorderWidth: 0
+      // },
     ];
 
     if (
@@ -368,7 +378,7 @@ export class AppComponent implements OnInit {
       && this.today.symptomatic < 0.1
       && this.today.asymptomatic < 0.1
     ) {
-      this.pause()
+      this.pause();
     }
   }
 
@@ -419,12 +429,6 @@ export class AppComponent implements OnInit {
     this.paused = false;
     this.spreading = true;
     this.showDailyTotal();
-
-    this.symptomaticData = [];
-    this.hospitalData = [];
-    this.icuData = [];
-    this.recoveredData = [];
-    this.deadData = [];
 
     this.barChartLabels = [];
     this.barChartSymptoms = [];
@@ -586,6 +590,5 @@ export class AppComponent implements OnInit {
       }
       this.rZeroAdditions[dayKey] += newAdditions;
     }
-    console.log(this.rZeroAdditions);
   }
 }
