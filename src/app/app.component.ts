@@ -34,7 +34,7 @@ export class AppComponent implements OnInit {
   public icuData: number[] = [];
   public recoveredData: number[] = [];
   public deadData: number[] = [];
-
+  public rZeroAdditions: number[] = [];
 
   public today: DaySummary;
   public dayTotal: DaySummary[] = [];
@@ -143,7 +143,7 @@ export class AppComponent implements OnInit {
   ];
   public totalEverInfected = 0;
   public totalEverSymptomatic = 0;
-  public doublingRate = 7;
+  public r = 1.5;
   public initiallyInfected = 350;
   public population = 67500000;
   public lengthOfDay = 0.3;
@@ -199,7 +199,7 @@ export class AppComponent implements OnInit {
     this.enumsToFields[StageIdentifier.dead] = 'dead';
     this.enumsToFields[StageIdentifier.postIcuRecovery] = 'postIcuRecovery';
     this.settingsForm = this.formBuilder.group({
-      doublingRate: this.doublingRate,
+      r: this.r,
       initiallyInfected: this.initiallyInfected,
       population: this.population,
       lengthOfDay: this.lengthOfDay,
@@ -251,7 +251,7 @@ export class AppComponent implements OnInit {
     const dayAddition = this.getDayAddition(this.day);
     const daySubtraction = this.getDaySubtraction(this.day);
     const dayTotal = this.getDayTotal(this.day);
-    dayTotal.setDoublingRate(this.doublingRate);
+    dayTotal.setR(this.r);
     dayTotal.setSpreading(this.spreading);
     if (this.day > 1) {
       const previousDay = this.getDayTotal(this.day - 1);
@@ -262,10 +262,12 @@ export class AppComponent implements OnInit {
       dayTotal.icu = previousDay.icu;
       dayTotal.dead = previousDay.dead;
       dayTotal.postIcuRecovery = previousDay.postIcuRecovery;
-      dayAddition.asymptomatic = this.calculateNewCases(previousDay.getTotalInfected());
+      dayAddition.asymptomatic = this.getNewCasesForDay();
     } else {
       dayAddition.asymptomatic = newCases;
     }
+
+    this.setFutureRZeroAdditions(dayAddition.asymptomatic);
 
     this.totalEverInfected += dayAddition.asymptomatic;
 
@@ -358,20 +360,31 @@ export class AppComponent implements OnInit {
         hoverBorderWidth: 0
       },
     ];
+
+    if (
+      this.day > 50
+      && this.today.getTotalHospitalisedNonIcu() < 0.1
+      && this.today.dayAddition.dead < 0.1
+      && this.today.symptomatic < 0.1
+      && this.today.asymptomatic < 0.1
+    ) {
+      this.pause()
+    }
   }
 
-  calculateNewCases(previousDayTotal: number): number {
+  getNewCasesForDay(): number {
     if (this.spreading === false) {
       return 0;
     }
-    let increaseRate = ((2 ** (1 / this.doublingRate)) - 1);
-    if (this.totalEverInfected / this.population > 0.5) {
-      increaseRate = increaseRate * (1 - (this.totalEverInfected / this.population));
-    }
-    if (increaseRate < 0) {
+
+    if (!this.rZeroAdditions.hasOwnProperty(this.day)) {
       return 0;
     }
-    return (previousDayTotal * increaseRate);
+    let newNumber = (this.rZeroAdditions[this.day] * this.r);
+    if ((newNumber + this.totalEverInfected) / this.population > 0.5) {
+      newNumber = newNumber * (1 - ((newNumber + this.totalEverInfected) / this.population));
+    }
+    return newNumber;
   }
 
   start(): void {
@@ -531,17 +544,13 @@ export class AppComponent implements OnInit {
        * There's probably better ways of doing this
        */
       for (let i = 1; i <= numberOfRands; i++) {
-        const base = d3.randomInt(1, 100)();
+        const base = d3.randomBates(3)();
         let randDay = 0;
-        if (base > 40 && base < 60) {
-          randDay = peakDays;
-        } else if (base < 50) {
-          randDay = Math.ceil(((base / 40) * (peakDays - minDays)) + minDays);
+        if (base < 0.5) {
+          randDay = Math.round(((2 * base) * (peakDays - minDays)) + minDays);
         } else {
-          randDay = Math.floor(((base / 100) * (maxDays - peakDays)) + minDays);
+          randDay = Math.round((base - 0.5) * 2 * (maxDays - peakDays) + (2 * minDays));
         }
-
-        randDay = Math.round(randDay);
 
         distributions[randDay] += valuePerSlot;
       }
@@ -565,5 +574,18 @@ export class AppComponent implements OnInit {
 
   toggleDisclaimer(): void {
     this.showDisclaimer = !this.showDisclaimer;
+  }
+
+  private setFutureRZeroAdditions(newCases: number): void {
+    const distro: number[] = this.getDistributions(newCases, 2, 14, 4);
+    for (const [key, newAdditions] of Object.entries(distro)) {
+      const dayKey = parseInt(key, 10) + this.day;
+
+      if (!this.rZeroAdditions.hasOwnProperty(dayKey)) {
+        this.rZeroAdditions[dayKey] = 0;
+      }
+      this.rZeroAdditions[dayKey] += newAdditions;
+    }
+    console.log(this.rZeroAdditions);
   }
 }
