@@ -394,7 +394,7 @@ export class AppComponent implements OnInit {
     if ((newNumber + this.totalEverInfected) / this.population > 0.5) {
       newNumber = newNumber * (1 - ((newNumber + this.totalEverInfected) / this.population));
     }
-    return newNumber;
+    return Math.max(newNumber, 0);
   }
 
   start(): void {
