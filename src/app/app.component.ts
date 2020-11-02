@@ -391,9 +391,7 @@ export class AppComponent implements OnInit {
       return 0;
     }
     let newNumber = (this.rZeroAdditions[this.day] * this.r);
-    if ((newNumber + this.totalEverInfected) / this.population > 0.5) {
-      newNumber = newNumber * (1 - ((newNumber + this.totalEverInfected) / this.population));
-    }
+    newNumber = newNumber * (1 - ((newNumber + this.totalEverInfected) / this.population));
     return Math.max(newNumber, 0);
   }
 
