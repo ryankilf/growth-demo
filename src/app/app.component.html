@@ -398,7 +398,6 @@
         <tr>
           <th>Day</th>
           <th>Rate</th>
-          <th>Spreading</th>
           <th *ngIf="aSymptomaticOn">asymtomatic</th>
           <th>Symtomatic</th>
           <th>Hospital</th>
@@ -411,8 +410,7 @@
         <tbody>
         <tr *ngFor="let oneDay of dayTotal.slice().reverse()">
           <td>{{oneDay.day}}</td>
-          <td>{{oneDay.r}}</td>
-          <td>{{oneDay.spreading ? 'yes' : 'no'}}</td>
+          <td>{{oneDay.spreading ? oneDay.r : 0}}</td>
           <td *ngIf="aSymptomaticOn">{{oneDay.asymptomatic | number: '1.0-0'}}</td>
           <td>{{oneDay.symptomatic | number: '1.0-0'}}</td>
           <td>{{oneDay.hospital | number: '1.0-0'}}</td>
