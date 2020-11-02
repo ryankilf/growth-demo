@@ -21,10 +21,12 @@
       <div class="disclaimer-inner column">
         <h2 class="title">Notes &amp; Disclaimers</h2>
         <ul class="list">
-          <li>This work is based on a diagram created by Katri Manninen ( <a target="_blank"
+          <li>This work is based on a diagram created by Katri Manninen ( <a onclick="window.open(this.href); return false;"
                                                                              href="https://twitter.com/katmanninen"
-                                                                             rel="nofollow">Engish Twitter</a>, <a
-            target="_blank" href="https://twitter.com/kutrinet" rel="nofollow">Finnish Twitter</a> )
+                                                                             rel="nofollow">Engish Twitter</a>,
+            <a
+              onclick="window.open(this.href); return false;"
+            href="https://twitter.com/kutrinet" rel="nofollow">Finnish Twitter</a> )
             demonstrating the typical progression of the disease.<br/>
             <button *ngIf="!showDiagram" class="button is-small" (click)="showDiagram = true">Show diagram</button>
             <img *ngIf="showDiagram" src="/assets/img/covid-typical-progress.jpeg"/>
@@ -62,7 +64,7 @@
             There are some outliers, in covid cases. In this model:
             <ul class="list">
               <li>
-                No one dies at home with silent hypoxia
+                No one dies at home with silent hypoxia.
               </li>
               <li>
                 Recoveries take a maximum of about 60 days from infection. There have been some cases where a patient
@@ -70,22 +72,25 @@
               </li>
               <li>
                 The model assumes everyone who falls ill can receive excellent treatment no matter how busy hospitals
-                get.
-                This is blatantly untrue, if hospitals are filled to overflowing, everyone suffers.
+                get. This is blatantly untrue, if hospitals are filled to overflowing, everyone suffers, absolutely including
+                people who need care for everything else.
               </li>
             </ul>
           </li>
           <li>
-            Once people start recovering or dying in the model, new cases won't quite double every n days.
+            <a
+              onclick="window.open(this.href); return false;"
+              href="https://www.healthknowledge.org.uk/public-health-textbook/research-methods/1a-epidemiology/epidemic-theory">
+              R0 is the reproduction number if everyone is susceptable. This is slightly different to R.</a>
           </li>
           <li>
             Infections will start to slow down, until, once all of the population has had the infection, there
             will be no more infections. Depending on the initial doubling rate new infections should grind to a halt
-            before 100% of the population has been infected. With a doubling rate of 5 days, infections stop once around
-            83%,
-            of the population have been infected. With a doubling rate of 6 days, infections stop at around 76%.
-            <a href="https://jamanetwork.com/journals/jama/fullarticle/2769704">I don't think those numbers are
-              ridiculous</a>,
+            before 100% of the population has been infected. With an R0 of 1.5, infections stop increasing once around
+            70%, of the population have been infected. With an R0 of 2, infections stop at around 80%.
+            <a
+              onclick="window.open(this.href); return false;"
+              href="https://jamanetwork.com/journals/jama/fullarticle/2769704">I don't think those numbers are ridiculous</a>,
             however:
             <ul class="list">
               <li>We don't know how long someone will be immune for after they have picked up an infection</li>
@@ -109,7 +114,7 @@
             It uses rounding and fractions of patients. Expect rounding errors in the results.
           </li>
           <li>You can see the source code on <a
-            target="_blank"
+            onclick="window.open(this.href); return false;"
             href="https://github.com/ryankilf/growth-demo#growth-demo">github</a></li>
         </ul>
         <hr/>
@@ -168,6 +173,7 @@
             <input
               [attr.disabled]="started && !paused ? '' : null"
               [(ngModel)]="lengthOfDay" id="lengthOfDay" class="input" type="number"
+              step="0.05"
               formControlName="lengthOfDay"/>
           </div>
         </div>
