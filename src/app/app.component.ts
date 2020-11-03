@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
 
   public enumsToFields: string[] = [];
 
-  public rZeroAdditions: number[] = [];
+  public rNaughtAdditions: number[] = [];
 
   public today: DaySummary;
   public dayTotal: DaySummary[] = [];
@@ -138,7 +138,7 @@ export class AppComponent implements OnInit {
   ];
   public totalEverInfected = 0;
   public totalEverSymptomatic = 0;
-  public r = 1.5;
+  public rNaught = 1.5;
   public initiallyInfected = 350;
   public population = 67500000;
   public lengthOfDay = 0.3;
@@ -185,6 +185,7 @@ export class AppComponent implements OnInit {
   public peakDeaths: DayChanges = new DayChanges(0);
   peakIcu: DaySummary = new DaySummary(0);
   peakHospitalised: DaySummary = new DaySummary(0);
+  public rOne: number;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -198,7 +199,7 @@ export class AppComponent implements OnInit {
     this.enumsToFields[StageIdentifier.dead] = 'dead';
     this.enumsToFields[StageIdentifier.postIcuRecovery] = 'postIcuRecovery';
     this.settingsForm = this.formBuilder.group({
-      r: this.r,
+      r: this.rNaught,
       initiallyInfected: this.initiallyInfected,
       population: this.population,
       lengthOfDay: this.lengthOfDay,
@@ -250,7 +251,8 @@ export class AppComponent implements OnInit {
     const dayAddition = this.getDayAddition(this.day);
     const daySubtraction = this.getDaySubtraction(this.day);
     const dayTotal = this.getDayTotal(this.day);
-    dayTotal.setR(this.r);
+    dayTotal.setRNaught(this.rNaught);
+    dayTotal.setROne(this.rOne);
     dayTotal.setSpreading(this.spreading);
     if (this.day > 1) {
       const previousDay = this.getDayTotal(this.day - 1);
@@ -262,11 +264,13 @@ export class AppComponent implements OnInit {
       dayTotal.dead = previousDay.dead;
       dayTotal.postIcuRecovery = previousDay.postIcuRecovery;
       dayAddition.asymptomatic = this.getNewCasesForDay();
+
     } else {
       dayAddition.asymptomatic = newCases;
     }
 
     this.setFutureRZeroAdditions(dayAddition.asymptomatic);
+    this.rOne = this.rNaught * (1 - ((dayAddition.asymptomatic + this.totalEverInfected) / this.population));
 
     this.totalEverInfected += dayAddition.asymptomatic;
 
@@ -320,7 +324,7 @@ export class AppComponent implements OnInit {
     this.barChartHospital.push(Math.round(this.today.hospital + this.today.postIcuRecovery));
     this.barChartIcu.push(Math.round(this.today.icu));
     this.barChartDead.push(Math.round(this.today.dead));
-    this.barChartR.push(this.today.r);
+    this.barChartR.push(this.today.rNaught);
     this.barChartData = [
       {
         data: this.barChartSymptoms,
@@ -387,10 +391,10 @@ export class AppComponent implements OnInit {
       return 0;
     }
 
-    if (!this.rZeroAdditions.hasOwnProperty(this.day)) {
+    if (!this.rNaughtAdditions.hasOwnProperty(this.day)) {
       return 0;
     }
-    const newNumber = (this.rZeroAdditions[this.day] * this.r);
+    const newNumber = (this.rNaughtAdditions[this.day] * this.rNaught);
     const realNewNumber = newNumber * (1 - ((newNumber + this.totalEverInfected) / this.population));
     return Math.max(realNewNumber, 0);
   }
@@ -421,6 +425,7 @@ export class AppComponent implements OnInit {
     this.dayAddition = [];
     this.daySubtraction = [];
     this.day = 1;
+    this.rOne = this.rNaught;
     this.totalEverInfected = 0;
     this.totalEverSymptomatic = 0;
     this.spreadingStoppedDeath = 0;
@@ -441,7 +446,7 @@ export class AppComponent implements OnInit {
     this.peakHospitalised = new DaySummary(0);
     this.peakIcu = new DaySummary(0);
     this.daySpreadingStoppedAdditions = new DayChanges(0);
-    this.rZeroAdditions = [];
+    this.rNaughtAdditions = [];
   }
 
   startInterval(): void {
@@ -585,10 +590,10 @@ export class AppComponent implements OnInit {
     for (const [key, newAdditions] of Object.entries(distro)) {
       const dayKey = parseInt(key, 10) + this.day;
 
-      if (!this.rZeroAdditions.hasOwnProperty(dayKey)) {
-        this.rZeroAdditions[dayKey] = 0;
+      if (!this.rNaughtAdditions.hasOwnProperty(dayKey)) {
+        this.rNaughtAdditions[dayKey] = 0;
       }
-      this.rZeroAdditions[dayKey] += newAdditions;
+      this.rNaughtAdditions[dayKey] += newAdditions;
     }
   }
 }

@@ -83,6 +83,8 @@
               href="https://www.healthknowledge.org.uk/public-health-textbook/research-methods/1a-epidemiology/epidemic-theory">
               R0 is the reproduction number if everyone is susceptable. This is slightly different to R.</a>
           </li>
+          <li>Although I have attempted to calculate R, which is the number more likely to be reported, and frankly more useful,
+          you'll be setting R0.</li>
           <li>
             Infections will start to slow down, until, once all of the population has had the infection, there
             will be no more infections. Depending on the initial doubling rate new infections should grind to a halt
@@ -162,8 +164,9 @@
         <div class="field">
           <div class="control">
 
-            <input [(ngModel)]="r" id="r" class="input" type="number" step="0.05"
-                   formControlName="r"/>
+            <input [(ngModel)]="rNaught" id="r" class="input" type="number" step="0.05"
+                   formControlName="r"/><br />
+            R1: {{rOne| number: '1.0-2'}}
           </div>
         </div>
       </div>
@@ -253,7 +256,7 @@
             </div>
             <div class="card-content big-number" *ngIf="this.yesterday">
               <div class="card-content">
-                {{ this.today.dead  | number: '1.0-0'}}
+                {{ this.today.dead | number: '1.0-0'}}
               </div>
             </div>
             <div class="card-footer">
@@ -402,6 +405,7 @@
         <tr>
           <th>Day</th>
           <th>R0</th>
+          <th>R1</th>
           <th *ngIf="aSymptomaticOn">asymtomatic</th>
           <th>Symtomatic</th>
           <th>Hospital</th>
@@ -414,7 +418,8 @@
         <tbody>
         <tr *ngFor="let oneDay of dayTotal.slice().reverse()">
           <td>{{oneDay.day}}</td>
-          <td>{{oneDay.spreading ? oneDay.r : 0}}</td>
+          <td>{{oneDay.spreading ? oneDay.rNaught : 0}}</td>
+          <td>{{(oneDay.spreading ? oneDay.rOne : 0) | number: '1.0-2'}}</td>
           <td *ngIf="aSymptomaticOn">{{oneDay.asymptomatic | number: '1.0-0'}}</td>
           <td>{{oneDay.symptomatic | number: '1.0-0'}}</td>
           <td>{{oneDay.hospital | number: '1.0-0'}}</td>
@@ -446,7 +451,7 @@
         <tbody>
         <tr *ngFor="let oneDay of dayTotal.slice().reverse(); let i = index">
           <td>{{oneDay.day}}</td>
-          <td>{{oneDay.r}}</td>
+          <td>{{oneDay.rNaught}}</td>
           <td>{{oneDay.spreading ? 'yes' : 'no'}}</td>
           <td *ngIf="aSymptomaticOn">
             {{oneDay.dayAddition.asymptomatic - oneDay.daySubtraction.asymptomatic | number: '1.0-0'}}</td>

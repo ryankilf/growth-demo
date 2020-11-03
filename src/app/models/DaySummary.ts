@@ -8,7 +8,8 @@ export class DaySummary {
   public icu: number;
   public dead: number;
   public postIcuRecovery: number;
-  public r?: number;
+  public rNaught?: number;
+  public rOne?: number;
   public spreading: boolean;
   public dayAddition: DayChanges;
   public daySubtraction: DayChanges;
@@ -31,14 +32,17 @@ export class DaySummary {
     this.daySubtraction = subtractions;
   }
 
-  setR(r: number): void {
-    this.r = r;
+  setRNaught(rNaught: number): void {
+    this.rNaught = rNaught;
+  }
+
+  setROne(rOne: number): void {
+    this.rOne = rOne;
   }
 
   setSpreading(spreading: boolean): void {
     this.spreading = spreading;
   }
-
 
   getTotalInfected(): number {
     return this.asymptomatic + this.symptomatic + this.hospital + this.icu + this.postIcuRecovery;
