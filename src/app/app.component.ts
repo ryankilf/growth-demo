@@ -361,6 +361,32 @@ export class AppComponent implements OnInit {
     }
     this.barChartData = [
       {
+        data: this.barChartRNaught,
+        label: 'R0',
+        stack: 'b',
+        type: 'line',
+        fill: false,
+        backgroundColor: '#7777ee',
+        borderColor: '#7777ee',
+        hoverBackgroundColor: '#7777ee',
+        borderWidth: 0,
+        hoverBorderWidth: 0,
+        yAxisID: 'r'
+      },
+      {
+        data: this.barChartROne,
+        label: 'R1',
+        stack: 'b',
+        type: 'line',
+        fill: false,
+        backgroundColor: '#f651ee',
+        borderColor: '#f651ee',
+        hoverBackgroundColor: '#f5a5f1',
+        borderWidth: 0,
+        hoverBorderWidth: 0,
+        yAxisID: 'r'
+      },
+      {
         data: this.barChartSymptoms,
         label: 'Symptoms',
         stack: 'a',
@@ -400,33 +426,7 @@ export class AppComponent implements OnInit {
         borderWidth: 0,
         hoverBorderWidth: 0,
         yAxisID: 'people'
-      },
-      {
-        data: this.barChartRNaught,
-        label: 'R0',
-        stack: 'b',
-        type: 'line',
-        fill: false,
-        backgroundColor: '#7777ee',
-        borderColor: '#7777ee',
-        hoverBackgroundColor: '#7777ee',
-        borderWidth: 0,
-        hoverBorderWidth: 0,
-        yAxisID: 'r'
-      },
-      {
-        data: this.barChartROne,
-        label: 'R1',
-        stack: 'b',
-        type: 'line',
-        fill: false,
-        backgroundColor: '#f651ee',
-        borderColor: '#f651ee',
-        hoverBackgroundColor: '#f5a5f1',
-        borderWidth: 0,
-        hoverBorderWidth: 0,
-        yAxisID: 'r'
-      },
+      }
     ];
 
     if (
