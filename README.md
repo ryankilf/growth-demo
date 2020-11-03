@@ -29,8 +29,6 @@ The app will automatically reload if you change any of the source files.
 * The application is very ugly. If you are willing to spend time making it look a bit neater, than please let me know.
 * I would accept a pull request that increases the accuracy of the model, all things being equal. If you are willing to do that
 work please let me know and understand the sources that you wish to use first of all. I will not accept a speculative PR on this.
-* The way that the number of infections increase is pretty unsophisticated. Ideally it would take account of when people become at their
-most infectious, rather than simply doubling every n days. 
 * It is _not very good_ on mobile. While some of this will be due to the amount of data, I would accept PRs which improve the 
 experience on mobile.
 
