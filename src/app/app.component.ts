@@ -160,6 +160,32 @@ export class AppComponent implements OnInit {
     animation: {
       duration: 0 // general animation time
     },
+    scales: {
+      yAxes: [{
+        type: 'linear',
+        display: true,
+        position: 'left',
+        id: 'people',
+        gridLines: {
+          display: false
+        },
+        ticks: {
+          beginAtZero: true
+        }
+      }, {
+        type: 'linear',
+        display: true,
+        position: 'right',
+        id: 'r',
+        offset: false,
+        gridLines: {
+          display: false
+        },
+        ticks: {
+          beginAtZero: true
+        }
+      }]
+    }
   };
   public barChartLabels: Label[] = [];
   public barChartType: ChartType = 'bar';
@@ -169,7 +195,8 @@ export class AppComponent implements OnInit {
   public barChartHospital: number[] = [];
   public barChartIcu: number[] = [];
   public barChartDead: number[] = [];
-  public barChartR: number[] = [];
+  public barChartRNaught: number[] = [];
+  public barChartROne: number[] = [];
 
 
   public barChartData: ChartDataSets[] = [
@@ -177,7 +204,8 @@ export class AppComponent implements OnInit {
     {data: this.barChartHospital, label: 'Hospital', stack: 'a'},
     {data: this.barChartIcu, label: 'Icu', stack: 'a'},
     {data: this.barChartDead, label: 'dead', stack: 'a'},
-    {data: this.barChartR, label: 'R', stack: 'b'},
+    {data: this.barChartRNaught, label: 'R0', stack: 'b'},
+    {data: this.barChartROne, label: 'R1', stack: 'b'},
   ];
 
   public daySpreadingStopped: DaySummary;
@@ -324,7 +352,13 @@ export class AppComponent implements OnInit {
     this.barChartHospital.push(Math.round(this.today.hospital + this.today.postIcuRecovery));
     this.barChartIcu.push(Math.round(this.today.icu));
     this.barChartDead.push(Math.round(this.today.dead));
-    this.barChartR.push(this.today.rNaught);
+    if (this.spreading) {
+      this.barChartRNaught.push(this.today.rNaught);
+      this.barChartROne.push(parseFloat(this.today.rOne.toPrecision(2)));
+    } else {
+      this.barChartRNaught.push(0);
+      this.barChartROne.push(0);
+    }
     this.barChartData = [
       {
         data: this.barChartSymptoms,
@@ -334,7 +368,8 @@ export class AppComponent implements OnInit {
         borderColor: '#88cc88',
         hoverBackgroundColor: '#eeffee',
         borderWidth: 0,
-        hoverBorderWidth: 0
+        hoverBorderWidth: 0,
+        yAxisID: 'people'
       },
       {
         data: this.barChartHospital,
@@ -343,7 +378,8 @@ export class AppComponent implements OnInit {
         backgroundColor: '#e7a32d',
         hoverBackgroundColor: '#fac54f',
         borderWidth: 0,
-        hoverBorderWidth: 0
+        hoverBorderWidth: 0,
+        yAxisID: 'people'
       },
       {
         data: this.barChartIcu,
@@ -352,7 +388,8 @@ export class AppComponent implements OnInit {
         backgroundColor: '#e7582d',
         hoverBackgroundColor: '#f97a4f',
         borderWidth: 0,
-        hoverBorderWidth: 0
+        hoverBorderWidth: 0,
+        yAxisID: 'people'
       },
       {
         data: this.barChartDead,
@@ -361,18 +398,35 @@ export class AppComponent implements OnInit {
         backgroundColor: '#000000',
         hoverBackgroundColor: '#555555',
         borderWidth: 0,
-        hoverBorderWidth: 0
+        hoverBorderWidth: 0,
+        yAxisID: 'people'
       },
-      // {
-      //   data: this.barChartR,
-      //   label: 'R',
-      //   stack: 'b',
-      //   type: 'line',
-      //   backgroundColor: '#7777ee',
-      //   hoverBackgroundColor: '#7777ee',
-      //   borderWidth: 0,
-      //   hoverBorderWidth: 0
-      // },
+      {
+        data: this.barChartRNaught,
+        label: 'R0',
+        stack: 'b',
+        type: 'line',
+        fill: false,
+        backgroundColor: '#7777ee',
+        borderColor: '#7777ee',
+        hoverBackgroundColor: '#7777ee',
+        borderWidth: 0,
+        hoverBorderWidth: 0,
+        yAxisID: 'r'
+      },
+      {
+        data: this.barChartROne,
+        label: 'R1',
+        stack: 'b',
+        type: 'line',
+        fill: false,
+        backgroundColor: '#f651ee',
+        borderColor: '#f651ee',
+        hoverBackgroundColor: '#f5a5f1',
+        borderWidth: 0,
+        hoverBorderWidth: 0,
+        yAxisID: 'r'
+      },
     ];
 
     if (
@@ -440,6 +494,8 @@ export class AppComponent implements OnInit {
     this.barChartIcu = [];
     this.barChartDead = [];
     this.barChartData = [];
+    this.barChartROne = [];
+    this.barChartRNaught = [];
 
     this.daySpreadingStopped = new DaySummary(0);
     this.peakDeaths = new DayChanges(0);
