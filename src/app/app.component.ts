@@ -354,7 +354,7 @@ export class AppComponent implements OnInit {
     this.barChartDead.push(Math.round(this.today.dead));
     if (this.spreading) {
       this.barChartRNaught.push(this.today.rNaught);
-      this.barChartROne.push(parseFloat(this.today.rOne.toPrecision(2)));
+      this.barChartROne.push(parseFloat(this.today.rOne.toPrecision(3)));
     } else {
       this.barChartRNaught.push(0);
       this.barChartROne.push(0);
